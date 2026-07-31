@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LogiCraft Web</title>
+    <style>
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            background-color: #0d0d0d;
+            font-family: sans-serif;
+        }
+
+        #game_frame {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        #pantalla-login {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: #1a1a1a;
+            z-index: 20000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+        }
+
+        .login-box {
+            background-color: rgba(30, 30, 30, 0.95);
+            padding: 40px;
+            border-radius: 12px;
+            border: 1px solid #444;
+            width: 320px;
+            text-align: center;
+        }
+
+        .mc-input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            background-color: #000;
+            border: 2px solid #444;
+            color: white;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        .mc-btn {
+            width: 100%;
+            padding: 14px;
+            margin-bottom: 10px;
+            background-color: #4CAF50;
+            border: none;
+            border-radius: 4px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            text-transform: uppercase;
+        }
+
+        /* Pantalla de carga y botón de forzar */
+        #mi-pantalla-carga {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: #000;
+            z-index: 9999;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            transition: opacity 0.8s;
+        }
+
+        .loader-spinner {
+            border: 4px solid #222;
+            border-top: 4px solid #4CAF50;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 1s linear infinite;
+            margin-bottom: 30px;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .forzar-entrada {
+            color: #444;
+            font-size: 12px;
+            margin-top: 20px;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="pantalla-login">
+        <div class="login-box">
+            <h1>LogiCraft</h1>
+            <form id="view-form" onsubmit="event.preventDefault(); iniciarSesion();">
+                <input type="text" id="username" class="mc-input" placeholder="Usuario" autocomplete="off" required>
+                <input type="password" id="password" class="mc-input" placeholder="Contraseña" required>
+                <button type="submit" class="mc-btn">Entrar</button>
+            </form>
+        </div>
+    </div>
+    <div id="mi-pantalla-carga">
+        <div class="loader-spinner"></div>
+        <h2 id="msg-carga">Cargando LogiCraft...</h2>
+        <p class="forzar-entrada" onclick="quitarCarga()">Si tardas mucho, haz clic aquí</p>
+    </div>
+    <div id="game_frame"></div>
+    <script>
+        let _internalUsername = "Jugador";
+
+        Object.defineProperty(window, 'loggedInUsername', {
+            get: function () { return _internalUsername; },
+            set: function (val) {
+                console.error("Acceso denegado: No puedes cambiar el usuario manualmente.");
+            },
+            configurable: false
+        });
+
+        // Función para calcular hash SHA-256 en hexadecimal
+        async function sha256(message) {
+            const msgUint8 = new TextEncoder().encode(message);
+            const hashBuffer = await crypto.subtle.digest('SHA-256', msgUint8);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+        }
+
+        async function iniciarSesion() {
+            const user = document.getElementById('username').value.trim();
+            const pass = document.getElementById('password').value;
+
+            if (!user || !pass) {
+                alert("Por favor ingresa usuario y contraseña.");
+                return;
+            }
+
+            _internalUsername = user;
+            const pwdHash = await sha256(pass);
+
+            document.getElementById('pantalla-login').style.display = 'none';
+            await iniciarMotorJuego(user, pwdHash);
+        }
+
+        function quitarCarga() {
+            const loader = document.getElementById("mi-pantalla-carga");
+            if (loader) {
+                loader.style.opacity = "0";
+                setTimeout(() => loader.remove(), 800);
+            }
+        }
+
+        // --- INYECCIÓN / CONSERVACIÓN DE PERFIL & SKIN ---
+        async function inyectarPerfil() {
+            try {
+                // Si el jugador ya tiene un perfil guardado con su skin, lo conservamos
+                if (localStorage.getItem("_eaglercraftX.p")) {
+                    console.log("Perfil existente detectado. Conservando la skin y opciones guardadas.");
+                    return;
+                }
+
+                // Si no existe perfil previo, creamos el inicial con el username
+                const templateB64 = "H4sIAAAAAAAA/z2MUQqAIBAFX0Rg4q06QicQ2Y8ITdz1/LVL5ft7wzAeWLGkWIlhm+FrIybZFH0gdZYrG7h1qvN5lFd3cJ2plZgJQYjlf6Ozq6viNDoGrIMHd5P6YHsAAAA=";
+                const binaryStr = atob(templateB64);
+                const gzipBytes = new Uint8Array(binaryStr.length);
+                for (let i = 0; i < binaryStr.length; i++) gzipBytes[i] = binaryStr.charCodeAt(i);
+                const ds = new DecompressionStream('gzip');
+                const writer = ds.writable.getWriter(); writer.write(gzipBytes); writer.close();
+                const response = new Response(ds.readable);
+                const uncompressedBuffer = await response.arrayBuffer();
+                let uncompressed = new Uint8Array(uncompressedBuffer);
+                const searchStr = "testusername";
+                const searchBytes = new TextEncoder().encode(searchStr);
+                let matchIdx = -1;
+                for (let i = 0; i < uncompressed.length - searchBytes.length; i++) {
+                    let match = true;
+                    for (let j = 0; j < searchBytes.length; j++) { if (uncompressed[i + j] !== searchBytes[j]) { match = false; break; } }
+                    if (match) { matchIdx = i; break; }
+                }
+                if (matchIdx !== -1) {
+                    const nameBytes = new TextEncoder().encode(window.loggedInUsername.substring(0, 16));
+                    const newUnc = new Uint8Array(uncompressed.length - searchBytes.length + nameBytes.length);
+                    newUnc.set(uncompressed.subarray(0, matchIdx - 2), 0);
+                    newUnc[matchIdx - 2] = (nameBytes.length >> 8) & 0xFF;
+                    newUnc[matchIdx - 1] = nameBytes.length & 0xFF;
+                    newUnc.set(nameBytes, matchIdx);
+                    newUnc.set(uncompressed.subarray(matchIdx + searchBytes.length), matchIdx + nameBytes.length);
+                    uncompressed = newUnc;
+                }
+                const cs = new CompressionStream('gzip');
+                const writer2 = cs.writable.getWriter(); writer2.write(uncompressed); writer2.close();
+                const response2 = new Response(cs.readable);
+                const compressedBuffer = await response2.arrayBuffer();
+                const compressed = new Uint8Array(compressedBuffer);
+                let finalBinary = '';
+                for (let i = 0; i < compressed.length; i++) finalBinary += String.fromCharCode(compressed[i]);
+                localStorage.setItem("_eaglercraftX.p", btoa(finalBinary));
+            } catch (e) { console.error("Error inyectando perfil:", e); }
+        }
+
+        async function iniciarMotorJuego(user, pwdHash) {
+            document.getElementById('mi-pantalla-carga').style.display = 'flex';
+            document.getElementById('msg-carga').innerText = user + " va a entrar dentro de poco...";
+
+            // Inyectamos el nombre de usuario antes de arrancar el motor
+            await inyectarPerfil();
+
+            const wssUrl = `wss://webcraft.arielcapdevila.com/?username=${encodeURIComponent(user)}&pwd=${pwdHash}`;
+
+            window.eaglercraftXOpts = {
+                container: "game_frame",
+                assetsURI: "assets.epk",
+                fixedUsername: user,
+                servers: [{ addr: wssUrl, name: "LogiCraft" }],
+                hooks: {
+                    screenChanged: function (screenName) {
+                        if (screenName) quitarCarga();
+                    }
+                }
+            };
+
+            setTimeout(quitarCarga, 15000);
+
+            if (typeof main === 'function') main();
+        }
+    </script>
+    <script src="classes.js" defer></script>
+</body>
+
+</html>
