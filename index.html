@@ -5,7 +5,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LogiCraft Web</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
+        * {
+            box-sizing: border-box;
+        }
+
         body,
         html {
             margin: 0;
@@ -13,8 +20,8 @@
             width: 100vw;
             height: 100vh;
             overflow: hidden;
-            background-color: #0d0d0d;
-            font-family: sans-serif;
+            background-color: #080a0c;
+            font-family: 'Outfit', sans-serif;
         }
 
         #game_frame {
@@ -25,13 +32,46 @@
             left: 0;
         }
 
+        /* Luces ambientales en segundo plano */
+        .bg-glow {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(140px);
+            opacity: 0.4;
+            pointer-events: none;
+            animation: pulseGlow 10s ease-in-out infinite alternate;
+        }
+
+        .bg-glow-1 {
+            width: 550px;
+            height: 550px;
+            background: #2e7d32;
+            top: -120px;
+            left: -120px;
+        }
+
+        .bg-glow-2 {
+            width: 650px;
+            height: 650px;
+            background: #1b5e20;
+            bottom: -160px;
+            right: -160px;
+            animation-delay: -5s;
+        }
+
+        @keyframes pulseGlow {
+            0% { transform: scale(1) translate(0, 0); opacity: 0.35; }
+            100% { transform: scale(1.2) translate(40px, 30px); opacity: 0.55; }
+        }
+
+        /* Pantalla de login principal */
         #pantalla-login {
             position: fixed;
             top: 0;
             left: 0;
             width: 100vw;
             height: 100vh;
-            background-color: #1a1a1a;
+            background: radial-gradient(circle at center, rgba(16, 22, 28, 0.88) 0%, rgba(6, 8, 12, 0.98) 100%);
             z-index: 20000;
             display: flex;
             flex-direction: column;
@@ -40,48 +80,160 @@
             color: white;
         }
 
+        /* Tarjeta Glassmorphic Esmeralda */
         .login-box {
-            background-color: rgba(30, 30, 30, 0.95);
-            padding: 40px;
-            border-radius: 12px;
-            border: 1px solid #444;
-            width: 320px;
+            background: rgba(18, 24, 30, 0.85);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            padding: 46px 40px;
+            border-radius: 20px;
+            border: 1px solid rgba(76, 175, 80, 0.25);
+            box-shadow: 
+                0 30px 60px rgba(0, 0, 0, 0.7),
+                0 0 40px rgba(76, 175, 80, 0.12),
+                inset 0 1px 0 rgba(255, 255, 255, 0.15);
+            width: 400px;
+            max-width: 90vw;
             text-align: center;
+            animation: fadeInScale 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+            z-index: 2;
+        }
+
+        @keyframes fadeInScale {
+            0% { opacity: 0; transform: scale(0.94) translateY(16px); }
+            100% { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        .logo-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(76, 175, 80, 0.12);
+            color: #81c784;
+            border: 1px solid rgba(76, 175, 80, 0.3);
+            padding: 5px 14px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+        }
+
+        .login-title {
+            font-size: 36px;
+            font-weight: 800;
+            margin: 0 0 6px 0;
+            background: linear-gradient(135deg, #ffffff 0%, #a5d6a7 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.5px;
+        }
+
+        .login-subtitle {
+            font-size: 14px;
+            color: #94a3b8;
+            margin: 0 0 28px 0;
+            font-weight: 400;
+        }
+
+        .input-group {
+            position: relative;
+            margin-bottom: 18px;
+            text-align: left;
+        }
+
+        .input-label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: #cbd5e1;
+            margin-bottom: 6px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #64748b;
+            font-size: 16px;
+            transition: color 0.3s;
+            pointer-events: none;
         }
 
         .mc-input {
             width: 100%;
-            padding: 12px;
-            margin-bottom: 15px;
-            background-color: #000;
-            border: 2px solid #444;
-            color: white;
-            border-radius: 4px;
-            box-sizing: border-box;
+            padding: 14px 14px 14px 44px;
+            background-color: rgba(10, 14, 20, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            color: #ffffff;
+            border-radius: 12px;
+            font-size: 15px;
+            font-family: inherit;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            outline: none;
+        }
+
+        .mc-input:focus {
+            border-color: #4CAF50;
+            background-color: rgba(10, 14, 20, 0.95);
+            box-shadow: 0 0 0 4px rgba(76, 175, 80, 0.2);
+        }
+
+        .input-wrapper:focus-within .input-icon {
+            color: #4CAF50;
         }
 
         .mc-btn {
             width: 100%;
-            padding: 14px;
-            margin-bottom: 10px;
-            background-color: #4CAF50;
-            border: none;
-            border-radius: 4px;
+            padding: 16px;
+            margin-top: 12px;
+            background: linear-gradient(135deg, #43A047 0%, #1B5E20 100%);
+            border: 1px solid rgba(129, 199, 132, 0.3);
+            border-radius: 12px;
             color: white;
-            font-weight: bold;
+            font-size: 15px;
+            font-weight: 700;
+            letter-spacing: 1px;
             cursor: pointer;
             text-transform: uppercase;
+            font-family: inherit;
+            box-shadow: 0 10px 25px rgba(46, 125, 50, 0.35);
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
         }
 
-        /* Pantalla de carga y botón de forzar */
+        .mc-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 14px 30px rgba(76, 175, 80, 0.5);
+            background: linear-gradient(135deg, #4CAF50 0%, #2E7D32 100%);
+        }
+
+        .mc-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 6px 16px rgba(46, 125, 50, 0.3);
+        }
+
+        /* Pantalla de carga */
         #mi-pantalla-carga {
             position: fixed;
             top: 0;
             left: 0;
             width: 100vw;
             height: 100vh;
-            background-color: #000;
-            z-index: 9999;
+            background: #06080c;
+            z-index: 29999;
             display: none;
             flex-direction: column;
             justify-content: center;
@@ -91,54 +243,243 @@
         }
 
         .loader-spinner {
-            border: 4px solid #222;
+            border: 4px solid rgba(255, 255, 255, 0.08);
             border-top: 4px solid #4CAF50;
             border-radius: 50%;
-            width: 60px;
-            height: 60px;
-            animation: spin 1s linear infinite;
-            margin-bottom: 30px;
+            width: 64px;
+            height: 64px;
+            animation: spin 0.9s cubic-bezier(0.5, 0.1, 0.5, 0.9) infinite;
+            margin-bottom: 24px;
+            box-shadow: 0 0 25px rgba(76, 175, 80, 0.3);
         }
 
         @keyframes spin {
-            0% {
-                transform: rotate(0deg);
-            }
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
 
-            100% {
-                transform: rotate(360deg);
-            }
+        #msg-carga {
+            font-size: 20px;
+            font-weight: 600;
+            color: #f1f5f9;
+            margin: 0 0 12px 0;
         }
 
         .forzar-entrada {
-            color: #444;
+            color: #64748b;
+            font-size: 13px;
+            margin-top: 16px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: color 0.2s;
+            border-bottom: 1px dashed #64748b;
+            padding-bottom: 2px;
+        }
+
+        .forzar-entrada:hover {
+            color: #a5d6a7;
+            border-bottom-color: #a5d6a7;
+        }
+        /* Toast Notification arriba a la derecha */
+        #toast-skin {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 40000;
+            background: rgba(18, 24, 30, 0.92);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(76, 175, 80, 0.4);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6), 0 0 20px rgba(76, 175, 80, 0.15);
+            border-radius: 14px;
+            padding: 14px 18px;
+            color: #ffffff;
+            display: none;
+            align-items: center;
+            gap: 14px;
+            font-family: 'Outfit', sans-serif;
+            max-width: 360px;
+            animation: toastSlideIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes toastSlideIn {
+            0% {
+                transform: translateX(140%) scale(0.9);
+                opacity: 0;
+            }
+            100% {
+                transform: translateX(0) scale(1);
+                opacity: 1;
+            }
+        }
+
+        @keyframes toastSlideOut {
+            0% {
+                transform: translateX(0) scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: translateX(140%) scale(0.9);
+                opacity: 0;
+            }
+        }
+
+        .toast-arrow-img {
+            width: 32px;
+            height: 32px;
+            object-fit: contain;
+            filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.5));
+            animation: bounceArrow 1.2s infinite alternate ease-in-out;
+        }
+
+        @keyframes bounceArrow {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-5px); }
+        }
+
+        .toast-content {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .toast-title {
             font-size: 12px;
-            margin-top: 20px;
+            font-weight: 700;
+            color: #81c784;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .toast-desc {
+            font-size: 14px;
+            color: #f1f5f9;
+            font-weight: 500;
+            line-height: 1.3;
+        }
+
+        .toast-close-btn {
+            background: none;
+            border: none;
+            color: #64748b;
+            font-size: 16px;
+            cursor: pointer;
+            padding: 4px;
+            margin-left: 6px;
+            transition: color 0.2s;
+            line-height: 1;
+        }
+
+        .toast-close-btn:hover {
+            color: #ffffff;
+        }
+        .user-avatar-badge {
+            width: 64px;
+            height: 64px;
+            background: rgba(76, 175, 80, 0.15);
+            border: 2px solid rgba(76, 175, 80, 0.4);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 12px auto;
+            box-shadow: 0 0 20px rgba(76, 175, 80, 0.25);
+        }
+
+        .saved-user-title {
+            font-size: 26px;
+            font-weight: 800;
+            color: #ffffff;
+            margin: 0 0 4px 0;
+            background: linear-gradient(135deg, #ffffff 0%, #a5d6a7 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .logout-link {
+            color: #64748b;
+            font-size: 13px;
+            margin-top: 18px;
             cursor: pointer;
             text-decoration: underline;
+            transition: color 0.2s;
+            display: inline-block;
+        }
+
+        .logout-link:hover {
+            color: #ef4444;
         }
     </style>
 </head>
 
 <body>
+    <!-- Toast Notification -->
+    <div id="toast-skin">
+        <img src="arrow.png" alt="Flecha" class="toast-arrow-img">
+        <div class="toast-content">
+            <span class="toast-title">¡Cambiar Skin!</span>
+            <span class="toast-desc">Haz click en la flecha para cambiar tu skin!</span>
+        </div>
+        <button class="toast-close-btn" onclick="cerrarToastSkin()" title="Cerrar">✕</button>
+    </div>
+
     <div id="pantalla-login">
+        <div class="bg-glow bg-glow-1"></div>
+        <div class="bg-glow bg-glow-2"></div>
         <div class="login-box">
-            <h1>LogiCraft</h1>
-            <form id="view-form" onsubmit="event.preventDefault(); iniciarSesion();">
-                <input type="text" id="username" class="mc-input" placeholder="Usuario" autocomplete="off" required>
-                <input type="password" id="password" class="mc-input" placeholder="Contraseña" required>
-                <button type="submit" class="mc-btn">Entrar</button>
-            </form>
+            <div class="logo-badge">🟩 LogiCraft Web</div>
+
+            <!-- Formulario de Login Normal -->
+            <div id="view-normal-login">
+                <h1 class="login-title">Inicia Sesión</h1>
+                <p class="login-subtitle">Ingresa tus credenciales para entrar al juego</p>
+                <form id="view-form" onsubmit="event.preventDefault(); iniciarSesion();">
+                    <div class="input-group">
+                        <label class="input-label" for="username">Usuario</label>
+                        <div class="input-wrapper">
+                            <input type="text" id="username" class="mc-input" placeholder="Tu nombre de usuario" autocomplete="off" required>
+                            <span class="input-icon">👤</span>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label class="input-label" for="password">Contraseña</label>
+                        <div class="input-wrapper">
+                            <input type="password" id="password" class="mc-input" placeholder="••••••••" required>
+                            <span class="input-icon">🔒</span>
+                        </div>
+                    </div>
+                    <button type="submit" class="mc-btn">
+                        <span>ENTRAR AL JUEGO</span>
+                        <span style="font-size: 18px;">➔</span>
+                    </button>
+                </form>
+            </div>
+
+            <!-- Vista de Sesión Guardada (Oculta por defecto) -->
+            <div id="view-saved-session" style="display: none;">
+                <div class="user-avatar-badge">
+                    <span style="font-size: 30px;">👤</span>
+                </div>
+                <h2 id="saved-user-name" class="saved-user-title">Jugador</h2>
+                <p class="login-subtitle" style="margin-bottom: 24px;">Tienes una sesión activa guardada</p>
+                <button type="button" class="mc-btn" onclick="entrarConSesionGuardada()">
+                    <span id="saved-btn-text">CONTINUAR COMO JUGADOR</span>
+                    <span style="font-size: 18px;">➔</span>
+                </button>
+                <span class="logout-link" onclick="cerrarSesionGuardada()">Cerrar sesión / Usar otra cuenta</span>
+            </div>
         </div>
     </div>
     <div id="mi-pantalla-carga">
         <div class="loader-spinner"></div>
         <h2 id="msg-carga">Cargando LogiCraft...</h2>
-        <p class="forzar-entrada" onclick="quitarCarga()">Si tardas mucho, haz clic aquí</p>
+        <p class="forzar-entrada" onclick="quitarCarga()">Si tarda mucho, haz clic aquí</p>
     </div>
     <div id="game_frame"></div>
     <script>
         let _internalUsername = "Jugador";
+        let _savedSessionData = null;
+        let _timerGuardarSesion = null;
 
         Object.defineProperty(window, 'loggedInUsername', {
             get: function () { return _internalUsername; },
@@ -147,6 +488,83 @@
             },
             configurable: false
         });
+
+        // Comprobar si hay una sesión guardada en localStorage al cargar
+        function comprobarSesionGuardada() {
+            try {
+                const raw = localStorage.getItem('logicraft_saved_session');
+                if (raw) {
+                    _savedSessionData = JSON.parse(raw);
+                    if (_savedSessionData && _savedSessionData.user && _savedSessionData.pwdHash) {
+                        mostrarVistaSesionGuardada(_savedSessionData.user);
+                        return;
+                    }
+                }
+            } catch (e) { console.error("Error leyendo sesión guardada:", e); }
+            mostrarVistaFormularioNormal();
+        }
+
+        function mostrarVistaSesionGuardada(user) {
+            document.getElementById('view-normal-login').style.display = 'none';
+            document.getElementById('view-saved-session').style.display = 'block';
+            document.getElementById('saved-user-name').innerText = user;
+            document.getElementById('saved-btn-text').innerText = "CONTINUAR COMO " + user.toUpperCase();
+        }
+
+        function mostrarVistaFormularioNormal() {
+            document.getElementById('view-normal-login').style.display = 'block';
+            document.getElementById('view-saved-session').style.display = 'none';
+        }
+
+        async function entrarConSesionGuardada() {
+            if (_savedSessionData && _savedSessionData.user && _savedSessionData.pwdHash) {
+                _internalUsername = _savedSessionData.user;
+                document.getElementById('pantalla-login').style.display = 'none';
+                await iniciarMotorJuego(_savedSessionData.user, _savedSessionData.pwdHash);
+            } else {
+                cerrarSesionGuardada();
+            }
+        }
+
+        function cerrarSesionGuardada() {
+            localStorage.removeItem('logicraft_saved_session');
+            _savedSessionData = null;
+            mostrarVistaFormularioNormal();
+        }
+
+        function guardarSesion(user, pwdHash) {
+            try {
+                const sessionObj = {
+                    user: user,
+                    pwdHash: pwdHash,
+                    savedAt: Date.now()
+                };
+                localStorage.setItem('logicraft_saved_session', JSON.stringify(sessionObj));
+                console.log("Sesión guardada inmediatamente en localStorage.");
+            } catch (e) {
+                console.error("Error guardando sesión:", e);
+            }
+        }
+
+        function mostrarToastSkin() {
+            const toast = document.getElementById('toast-skin');
+            if (toast && toast.style.display !== 'flex') {
+                toast.style.display = 'flex';
+                setTimeout(() => {
+                    cerrarToastSkin();
+                }, 12000);
+            }
+        }
+
+        function cerrarToastSkin() {
+            const toast = document.getElementById('toast-skin');
+            if (toast && toast.style.display !== 'none') {
+                toast.style.animation = 'toastSlideOut 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards';
+                setTimeout(() => {
+                    toast.style.display = 'none';
+                }, 500);
+            }
+        }
 
         // Función para calcular hash SHA-256 en hexadecimal
         async function sha256(message) {
@@ -176,7 +594,10 @@
             const loader = document.getElementById("mi-pantalla-carga");
             if (loader) {
                 loader.style.opacity = "0";
-                setTimeout(() => loader.remove(), 800);
+                setTimeout(() => {
+                    loader.remove();
+                    mostrarToastSkin();
+                }, 800);
             }
         }
 
@@ -232,6 +653,9 @@
             document.getElementById('mi-pantalla-carga').style.display = 'flex';
             document.getElementById('msg-carga').innerText = user + " va a entrar dentro de poco...";
 
+            // Guardar sesión inmediatamente en localStorage
+            guardarSesion(user, pwdHash);
+
             // Inyectamos el nombre de usuario antes de arrancar el motor
             await inyectarPerfil();
 
@@ -253,6 +677,9 @@
 
             if (typeof main === 'function') main();
         }
+
+        // Ejecutar comprobación al cargar la página
+        comprobarSesionGuardada();
     </script>
     <script src="classes.js" defer></script>
 </body>
