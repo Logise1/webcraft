@@ -444,7 +444,7 @@
         }
 
         function cerrarSesionGuardada() {
-            localStorage.removeItem('logicraft_saved_session');
+            try { localStorage.clear(); } catch (e) { console.error("Error al borrar localStorage:", e); }
             _savedSessionData = null;
             document.getElementById('view-saved-session').style.display = 'none';
             document.getElementById('view-normal-login').style.display = 'block';
@@ -455,7 +455,7 @@
         }
 
         function cerrarSesionYRecargar() {
-            localStorage.removeItem('logicraft_saved_session');
+            try { localStorage.clear(); } catch (e) { console.error("Error al borrar localStorage:", e); }
             _savedSessionData = null;
             location.reload();
         }
