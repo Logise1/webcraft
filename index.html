@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LogiCraft Web</title>
+    <link type="image/png" rel="shortcut icon" href="favicon.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -527,68 +528,57 @@
             }
         }
 
-        async function inyectarPerfil() {
-            try {
-                if (localStorage.getItem("_eaglercraftX.p")) {
-                    console.log("Perfil existente detectado. Conservando skin y configuración.");
-                    return;
-                }
+        function abrirCreditsLogise() {
+            const w = window.open("about:blank", "eaglercraft-credits", "width=480,height=220");
+            if (!w) return;
+            w.document.open();
+            w.document.write("<!DOCTYPE html><html><head><meta charset=\"UTF-8\"><title>EaglercraftX 1.12 Credits</title></head><body style=\"margin:16px;background:#ffffff;color:#000000;font-family:sans-serif;\"><p>Creado por Logise usando TeaVM</p><p>1.12.2 MC</p></body></html>");
+            w.document.close();
+        }
 
-                const templateB64 = "H4sIAAAAAAAA/z2MUQqAIBAFX0Rg4q06QicQ2Y8ITdz1/LVL5ft7wzAeWLGkWIlhm+FrIybZFH0gdZYrG7h1qvN5lFd3cJ2plZgJQYjlf6Ozq6viNDoGrIMHd5P6YHsAAAA=";
-                const binaryStr = atob(templateB64);
-                const gzipBytes = new Uint8Array(binaryStr.length);
-                for (let i = 0; i < binaryStr.length; i++) gzipBytes[i] = binaryStr.charCodeAt(i);
-                const ds = new DecompressionStream('gzip');
-                const writer = ds.writable.getWriter(); writer.write(gzipBytes); writer.close();
-                const response = new Response(ds.readable);
-                const uncompressedBuffer = await response.arrayBuffer();
-                let uncompressed = new Uint8Array(uncompressedBuffer);
-                const searchStr = "testusername";
-                const searchBytes = new TextEncoder().encode(searchStr);
-                let matchIdx = -1;
-                for (let i = 0; i < uncompressed.length - searchBytes.length; i++) {
-                    let match = true;
-                    for (let j = 0; j < searchBytes.length; j++) { if (uncompressed[i + j] !== searchBytes[j]) { match = false; break; } }
-                    if (match) { matchIdx = i; break; }
-                }
-                if (matchIdx !== -1) {
-                    const nameBytes = new TextEncoder().encode(window.loggedInUsername.substring(0, 16));
-                    const newUnc = new Uint8Array(uncompressed.length - searchBytes.length + nameBytes.length);
-                    newUnc.set(uncompressed.subarray(0, matchIdx - 2), 0);
-                    newUnc[matchIdx - 2] = (nameBytes.length >> 8) & 0xFF;
-                    newUnc[matchIdx - 1] = nameBytes.length & 0xFF;
-                    newUnc.set(nameBytes, matchIdx);
-                    newUnc.set(uncompressed.subarray(matchIdx + searchBytes.length), matchIdx + nameBytes.length);
-                    uncompressed = newUnc;
-                }
-                const cs = new CompressionStream('gzip');
-                const writer2 = cs.writable.getWriter(); writer2.write(uncompressed); writer2.close();
-                const response2 = new Response(cs.readable);
-                const compressedBuffer = await response2.arrayBuffer();
-                const compressed = new Uint8Array(compressedBuffer);
-                let finalBinary = '';
-                for (let i = 0; i < compressed.length; i++) finalBinary += String.fromCharCode(compressed[i]);
-                localStorage.setItem("_eaglercraftX.p", btoa(finalBinary));
-            } catch (e) { console.error("Error inyectando perfil:", e); }
+        function esperarMotor() {
+            if (typeof main === "function") return Promise.resolve();
+            return new Promise(function (resolve) {
+                const t = setInterval(function () {
+                    if (typeof main === "function") {
+                        clearInterval(t);
+                        resolve();
+                    }
+                }, 50);
+            });
+        }
+
+        async function cargarPaqueteDefault() {
+            if (window._logicraftDefaultPack && window._logicraftDefaultPack.length) return;
+            const res = await fetch("defaultpack.zip");
+            if (!res.ok) throw new Error("No se pudo cargar defaultpack.zip");
+            window._logicraftDefaultPack = new Uint8Array(await res.arrayBuffer());
         }
 
         async function iniciarMotorJuego(user, pwdHash) {
             document.getElementById('mi-pantalla-carga').style.display = 'flex';
             document.getElementById('msg-carga').innerText = "Entrando como " + user + "...";
 
-            await inyectarPerfil();
+            try {
+                document.getElementById('msg-carga').innerText = "Cargando paquete de texturas...";
+                await cargarPaqueteDefault();
+            } catch (e) {
+                console.error("Error cargando defaultpack.zip:", e);
+            }
+
+            document.getElementById('msg-carga').innerText = "Entrando como " + user + "...";
 
             const wssUrl = `wss://webcraft.arielcapdevila.com/?username=${encodeURIComponent(user)}&pwd=${pwdHash}`;
 
             window.eaglercraftXOpts = {
                 container: "game_frame",
                 assetsURI: "assets.epk",
+                localesURI: "lang/",
+                worldsDB: "worlds",
                 fixedUsername: user,
-                allowVoiceClient: true,
-                iceServers: [
-                    { urls: "stun:stun.l.google.com:19302" },
-                    { urls: "stun:stun1.l.google.com:19302" }
-                ],
+                allowVoiceClient: false,
+                enableDownloadOfflineButton: false,
+                localStorageNamespace: "_eaglercraft_1.12",
                 servers: [{ addr: wssUrl, name: "LogiCraft" }],
                 hooks: {
                     screenChanged: function (screenName) {
@@ -599,7 +589,8 @@
 
             setTimeout(quitarCarga, 15000);
 
-            if (typeof main === 'function') main();
+            await esperarMotor();
+            main();
         }
 
         comprobarSesionGuardada();
