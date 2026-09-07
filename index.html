@@ -344,6 +344,219 @@
         }
 
         .toast-close:hover { color: #ffffff; }
+
+        #pantalla-hub {
+            position: fixed;
+            inset: 0;
+            z-index: 21000;
+            display: none;
+            background:
+                radial-gradient(ellipse at 20% 0%, rgba(76, 175, 80, 0.16), transparent 42%),
+                radial-gradient(ellipse at 90% 80%, rgba(32, 90, 50, 0.18), transparent 40%),
+                #070a0d;
+            overflow: auto;
+        }
+
+        .hub-shell {
+            min-height: 100%;
+            display: grid;
+            grid-template-columns: 340px 1fr;
+            gap: 28px;
+            padding: 28px 32px 40px;
+            max-width: 1280px;
+            margin: 0 auto;
+        }
+
+        .hub-preview-card, .hub-panel {
+            background: rgba(18, 24, 30, 0.88);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            backdrop-filter: blur(18px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
+        }
+
+        .hub-preview-card {
+            padding: 28px 22px 22px;
+            text-align: center;
+            align-self: start;
+            position: sticky;
+            top: 28px;
+        }
+
+        .hub-preview-stage {
+            height: 340px;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            background: linear-gradient(180deg, rgba(76, 175, 80, 0.08), rgba(0, 0, 0, 0.25));
+            border-radius: 16px;
+            border: 1px solid rgba(76, 175, 80, 0.2);
+            overflow: hidden;
+            margin-bottom: 18px;
+        }
+
+        #hub-skin-img, #hub-skin-canvas {
+            max-height: 320px;
+            image-rendering: pixelated;
+        }
+
+        #hub-skin-canvas { display: none; }
+
+        .hub-user-label {
+            font-size: 12px;
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+            color: #94a3b8;
+            font-weight: 700;
+        }
+
+        .hub-user-name {
+            font-size: 26px;
+            font-weight: 800;
+            margin: 4px 0 8px;
+            word-break: break-word;
+        }
+
+        .hub-skin-name {
+            color: #81c784;
+            font-size: 13px;
+            font-weight: 600;
+            min-height: 20px;
+            margin-bottom: 16px;
+        }
+
+        .model-toggle {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 14px;
+        }
+
+        .model-toggle button {
+            flex: 1;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            background: rgba(255, 255, 255, 0.04);
+            color: #cbd5e1;
+            border-radius: 10px;
+            padding: 10px;
+            font-family: inherit;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .model-toggle button.active {
+            background: rgba(76, 175, 80, 0.2);
+            border-color: rgba(76, 175, 80, 0.7);
+            color: #fff;
+        }
+
+        .hub-panel { padding: 26px 26px 22px; }
+
+        .hub-toolbar {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 18px;
+            flex-wrap: wrap;
+        }
+
+        .hub-toolbar .clean-input { flex: 1; min-width: 180px; margin: 0; }
+
+        .hub-toolbar .play-btn, .hub-toolbar .btn-secondary {
+            width: auto;
+            margin: 0;
+            padding: 13px 16px;
+        }
+
+        .hub-status {
+            font-size: 13px;
+            color: #94a3b8;
+            margin-bottom: 14px;
+            min-height: 18px;
+        }
+
+        .skin-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(108px, 1fr));
+            gap: 10px;
+            max-height: 52vh;
+            overflow: auto;
+            padding-right: 4px;
+        }
+
+        .skin-card {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 10px 8px 8px;
+            cursor: pointer;
+            text-align: center;
+            transition: 0.18s ease;
+        }
+
+        .skin-card:hover, .skin-card.selected {
+            transform: translateY(-2px);
+            border-color: rgba(76, 175, 80, 0.7);
+            background: rgba(76, 175, 80, 0.12);
+        }
+
+        .skin-card img, .skin-card-face {
+            width: 64px;
+            height: 64px;
+            image-rendering: pixelated;
+            border-radius: 8px;
+        }
+
+        .skin-card-face {
+            margin: 0 auto;
+            background-repeat: no-repeat;
+            background-size: 512px 512px;
+            background-position: -64px -64px;
+            box-shadow: inset 0 0 0 1px rgba(255,255,255,0.08);
+        }
+
+        .skin-card span {
+            display: block;
+            margin-top: 6px;
+            font-size: 11px;
+            font-weight: 600;
+            color: #e2e8f0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .skin-cats {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 14px;
+        }
+
+        .skin-cat {
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            background: rgba(255, 255, 255, 0.05);
+            color: #e2e8f0;
+            border-radius: 999px;
+            padding: 7px 12px;
+            font-family: inherit;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .skin-cat:hover, .skin-cat.active {
+            background: rgba(76, 175, 80, 0.2);
+            border-color: rgba(76, 175, 80, 0.7);
+            color: #fff;
+        }
+
+        @media (max-width: 860px) {
+            .hub-shell {
+                grid-template-columns: 1fr;
+                padding: 16px;
+            }
+            .hub-preview-card { position: static; }
+            .hub-preview-stage { height: 240px; }
+        }
     </style>
 </head>
 
@@ -394,6 +607,38 @@
         </div>
     </div>
 
+    <div id="pantalla-hub">
+        <div class="hub-shell">
+            <aside class="hub-preview-card">
+                <div class="brand-logo" style="margin-bottom:16px;">🟩 LogiCraft<span>Web</span></div>
+                <div class="hub-preview-stage">
+                    <img id="hub-skin-img" alt="Vista de skin" src="https://mc-heads.net/body/MHF_Steve">
+                    <canvas id="hub-skin-canvas" width="128" height="288"></canvas>
+                </div>
+                <div class="hub-user-label">Jugando como</div>
+                <div class="hub-user-name" id="hub-username">Jugador</div>
+                <div class="hub-skin-name" id="hub-skin-label">Skin predeterminada</div>
+                <div class="model-toggle">
+                    <button type="button" id="btn-model-steve" class="active" onclick="setSkinModel('steve')">Steve</button>
+                    <button type="button" id="btn-model-alex" onclick="setSkinModel('alex')">Alex</button>
+                </div>
+                <button type="button" class="play-btn" onclick="entrarAlJuego()">ENTRAR AL MUNDO</button>
+                <button type="button" class="btn-secondary" onclick="volverAlLogin()">Cambiar cuenta</button>
+            </aside>
+            <section class="hub-panel">
+                <div class="hub-toolbar">
+                    <input type="text" id="skin-search" class="clean-input" placeholder="Buscar por contenido: dragón, ninja, gato, enderman..." maxlength="40" onkeydown="if(event.key==='Enter'){event.preventDefault();buscarSkinsMundo();}">
+                    <button type="button" class="play-btn" onclick="buscarSkinsMundo()">Buscar</button>
+                    <button type="button" class="btn-secondary" onclick="document.getElementById('skin-file').click()">Subir PNG</button>
+                    <input type="file" id="skin-file" accept="image/png" style="display:none" onchange="subirSkinArchivo(event)">
+                </div>
+                <div class="skin-cats" id="skin-cats"></div>
+                <div class="hub-status" id="hub-status">Busca skins por tema o elige una categoría.</div>
+                <div class="skin-grid" id="skin-grid"></div>
+            </section>
+        </div>
+    </div>
+
     <!-- Pantalla de Carga -->
     <div id="mi-pantalla-carga">
         <div class="spinner"></div>
@@ -408,6 +653,32 @@
         let _savedSessionData = null;
         let _toastMostrado = false;
         let _cargaQuitada = false;
+        let _pendingPwdHash = "";
+        let _selectedSkin = null;
+        let _hubSkinResults = [];
+        let _skinCatActiva = "";
+        const SKINS_CATEGORIAS = [
+            { q: "dragon", label: "Dragón" },
+            { q: "ninja", label: "Ninja" },
+            { q: "gato", label: "Gato" },
+            { q: "enderman", label: "Enderman" },
+            { q: "zombie", label: "Zombie" },
+            { q: "creeper", label: "Creeper" },
+            { q: "robot", label: "Robot" },
+            { q: "fox", label: "Zorro" },
+            { q: "wolf", label: "Lobo" },
+            { q: "knight", label: "Caballero" },
+            { q: "steve", label: "Steve" },
+            { q: "alex", label: "Alex" }
+        ];
+        const SKINS_BLOQUEADAS = [
+            "nude", "nuda", "nudo", "naked", "nsfw", "lewd", "hentai", "ecchi", "porn", "porno",
+            "xxx", "sex", "sexy", "sexual", "erotic", "erotica", "hentai", "onlyfans", "of ",
+            "topless", "bottomless", "underwear", "lingerie", "bikini", "swimsuit",
+            "desnud", "tetas", "teta", "culo", "vagina", "penis", "pene", "boob", "breast",
+            "nipple", "genital", "futa", "loli", "shota", "r34", "rule34", "rule 34",
+            "waifu nsfw", "hot girl", "hot boy", "nude guard", "guard girl"
+        ];
 
         Object.defineProperty(window, 'loggedInUsername', {
             get: function () { return _internalUsername; },
@@ -439,8 +710,10 @@
 
         async function usarSesionGuardada() {
             if (_savedSessionData && _savedSessionData.user && _savedSessionData.pwdHash) {
+                _internalUsername = _savedSessionData.user;
+                _pendingPwdHash = _savedSessionData.pwdHash;
                 document.getElementById('pantalla-login').style.display = 'none';
-                await iniciarMotorJuego(_savedSessionData.user, _savedSessionData.pwdHash);
+                mostrarHub();
             }
         }
 
@@ -509,9 +782,348 @@
             _internalUsername = user;
             const pwdHash = await sha256(pass);
             guardarSesion(user, pwdHash);
+            _pendingPwdHash = pwdHash;
 
             document.getElementById('pantalla-login').style.display = 'none';
-            await iniciarMotorJuego(user, pwdHash);
+            mostrarHub();
+        }
+
+        function volverAlLogin() {
+            document.getElementById('pantalla-hub').style.display = 'none';
+            document.getElementById('pantalla-login').style.display = 'flex';
+        }
+
+        function mostrarHub() {
+            document.getElementById('hub-username').textContent = _internalUsername;
+            document.getElementById('pantalla-hub').style.display = 'block';
+            pintarCategoriasSkin();
+            restaurarSkinGuardada();
+            buscarSkinsMundo("");
+        }
+
+        function setSkinModel(model) {
+            document.getElementById('btn-model-steve').classList.toggle('active', model === 'steve');
+            document.getElementById('btn-model-alex').classList.toggle('active', model === 'alex');
+            if (_selectedSkin) {
+                _selectedSkin.model = model;
+                guardarSkinLocal();
+            }
+        }
+
+        function guardarSkinLocal() {
+            try {
+                if (_selectedSkin && _selectedSkin.pngBase64) {
+                    localStorage.setItem('logicraft_selected_skin', JSON.stringify(_selectedSkin));
+                }
+            } catch (e) {}
+        }
+
+        function restaurarSkinGuardada() {
+            try {
+                const raw = localStorage.getItem('logicraft_selected_skin');
+                if (!raw) return;
+                const saved = JSON.parse(raw);
+                if (saved && saved.pngBase64) {
+                    aplicarSkinSeleccionada(saved, false);
+                }
+            } catch (e) {}
+        }
+
+        function escapeHtmlSkin(s) {
+            return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
+                return ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c];
+            });
+        }
+
+        function textureHttps(url) {
+            return String(url || "").replace(/^http:\/\//i, "https://");
+        }
+
+        function pintarCategoriasSkin() {
+            const box = document.getElementById('skin-cats');
+            if (!box) return;
+            box.innerHTML = SKINS_CATEGORIAS.map(function (cat) {
+                const active = _skinCatActiva === cat.q ? " active" : "";
+                return '<button type="button" class="skin-cat' + active + '" onclick="buscarCategoriaSkin(\'' + cat.q + '\')">' + escapeHtmlSkin(cat.label) + '</button>';
+            }).join("");
+        }
+
+        function buscarCategoriaSkin(q) {
+            document.getElementById('skin-search').value = q;
+            buscarSkinsMundo(q);
+        }
+
+        function pintarGaleriaSkins(items, status) {
+            _hubSkinResults = items || [];
+            const grid = document.getElementById('skin-grid');
+            const st = document.getElementById('hub-status');
+            if (status) st.textContent = status;
+            if (!_hubSkinResults.length) {
+                grid.innerHTML = "";
+                return;
+            }
+            grid.innerHTML = _hubSkinResults.map(function (item, i) {
+                const name = escapeHtmlSkin(item.name || "Skin");
+                const tex = textureHttps(item.textureUrl);
+                return '<button type="button" class="skin-card" onclick="elegirSkinGaleria(' + i + ')">' +
+                    '<div class="skin-card-face" style="background-image:url(\'' + tex.replace(/'/g, "") + '\')"></div>' +
+                    '<span>' + name + '</span></button>';
+            }).join("");
+        }
+
+        async function fetchConCors(url, asJson) {
+            const httpsUrl = textureHttps(url);
+            const attempts = [
+                httpsUrl,
+                "https://corsproxy.io/?" + encodeURIComponent(httpsUrl),
+                "https://api.allorigins.win/raw?url=" + encodeURIComponent(httpsUrl)
+            ];
+            let lastErr = null;
+            for (let i = 0; i < attempts.length; i++) {
+                try {
+                    const res = await fetch(attempts[i], { cache: "no-store" });
+                    if (!res.ok) throw new Error("http " + res.status);
+                    return asJson ? await res.json() : await res.blob();
+                } catch (e) {
+                    lastErr = e;
+                }
+            }
+            throw lastErr || new Error("fetch");
+        }
+
+        function textoSkinInapropiado(text) {
+            const t = String(text || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+            if (!t.trim()) return false;
+            for (let i = 0; i < SKINS_BLOQUEADAS.length; i++) {
+                if (t.indexOf(SKINS_BLOQUEADAS[i]) !== -1) return true;
+            }
+            return false;
+        }
+
+        function esBusquedaSegura(q) {
+            if (textoSkinInapropiado(q)) return false;
+            const t = q.toLowerCase().trim();
+            if (t === "girl" || t === "boy" || t === "chica" || t === "chico" || t === "hot") return false;
+            return true;
+        }
+
+        async function buscarSkinsMundo(forcedQuery) {
+            const raw = (forcedQuery != null ? forcedQuery : document.getElementById('skin-search').value).trim();
+            const st = document.getElementById('hub-status');
+            if (raw && !esBusquedaSegura(raw)) {
+                _skinCatActiva = "";
+                pintarCategoriasSkin();
+                pintarGaleriaSkins([], "Esa búsqueda no está permitida. Prueba un tema como ninja, gato o dragón.");
+                return;
+            }
+            const q = raw;
+            _skinCatActiva = q.toLowerCase();
+            pintarCategoriasSkin();
+            st.textContent = q ? ("Buscando skins de \"" + q + "\"...") : "Cargando skins recomendadas...";
+            try {
+                const endpoint = q
+                    ? "https://api.mineskin.org/get/list/0?filter=" + encodeURIComponent(q)
+                    : "https://api.mineskin.org/get/list/0?filter=steve";
+                const data = await fetchConCors(endpoint, true);
+                const skins = (data && data.skins) ? data.skins : [];
+                const items = skins.map(function (s) {
+                    return {
+                        name: (s.name && String(s.name).trim()) || (q ? q : "Steve"),
+                        textureUrl: s.url,
+                        model: (s.model === "slim" || s.variant === "slim") ? "alex" : "steve",
+                        id: s.id
+                    };
+                }).filter(function (s) {
+                    return !!s.textureUrl && !textoSkinInapropiado(s.name);
+                });
+                if (!items.length) {
+                    pintarGaleriaSkins([], q
+                        ? ("No hay skins aptas para \"" + q + "\". Prueba otra palabra: ninja, gato, dragón...")
+                        : "No hay skins para mostrar ahora.");
+                    return;
+                }
+                pintarGaleriaSkins(items, q
+                    ? ("Encontradas " + items.length + " skins para \"" + q + "\".")
+                    : "Skins recomendadas. Busca por contenido o elige una categoría.");
+            } catch (e) {
+                st.textContent = "No se pudo buscar ahora. Inténtalo de nuevo o sube un PNG.";
+            }
+        }
+
+        async function elegirSkinGaleria(index) {
+            const item = _hubSkinResults[index];
+            if (!item || !item.textureUrl || textoSkinInapropiado(item.name)) return;
+            const st = document.getElementById('hub-status');
+            st.textContent = "Cargando \"" + item.name + "\"...";
+            try {
+                const blob = await fetchConCors(item.textureUrl, false);
+                const pngBase64 = await blobToBase64(blob);
+                aplicarSkinSeleccionada({
+                    name: String(item.name || "Skin").substring(0, 16),
+                    model: item.model === "alex" ? "alex" : (document.getElementById('btn-model-alex').classList.contains('active') ? "alex" : "steve"),
+                    pngBase64: pngBase64,
+                    previewUser: null
+                }, true);
+                st.textContent = "Skin \"" + item.name + "\" seleccionada.";
+            } catch (e) {
+                st.textContent = "No se pudo descargar esa skin. Prueba otra o súbela como PNG.";
+            }
+        }
+
+        function subirSkinArchivo(ev) {
+            const file = ev.target.files && ev.target.files[0];
+            ev.target.value = '';
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function () {
+                const pngBase64 = String(reader.result);
+                aplicarSkinSeleccionada({
+                    name: (file.name || "custom").replace(/\.png$/i, "").slice(0, 16),
+                    model: document.getElementById('btn-model-alex').classList.contains('active') ? 'alex' : 'steve',
+                    pngBase64: pngBase64,
+                    previewUser: null
+                }, true);
+                document.getElementById('hub-status').textContent = "Skin subida. Puedes entrar al mundo cuando quieras.";
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function blobToBase64(blob) {
+            return new Promise(function (resolve, reject) {
+                const reader = new FileReader();
+                reader.onload = function () { resolve(String(reader.result)); };
+                reader.onerror = reject;
+                reader.readAsDataURL(blob);
+            });
+        }
+
+        function aplicarSkinSeleccionada(skin, persist) {
+            _selectedSkin = skin;
+            document.getElementById('hub-skin-label').textContent = skin.name || "Skin personalizada";
+            document.getElementById('btn-model-steve').classList.toggle('active', skin.model !== 'alex');
+            document.getElementById('btn-model-alex').classList.toggle('active', skin.model === 'alex');
+            const img = document.getElementById('hub-skin-img');
+            const canvas = document.getElementById('hub-skin-canvas');
+            if (skin.previewUser) {
+                img.style.display = 'block';
+                canvas.style.display = 'none';
+                img.src = "https://mc-heads.net/body/" + encodeURIComponent(skin.previewUser);
+            } else {
+                img.style.display = 'none';
+                canvas.style.display = 'block';
+                dibujarPreviewSkin(skin.pngBase64, canvas);
+            }
+            if (persist) guardarSkinLocal();
+        }
+
+        function dibujarPreviewSkin(dataUrl, canvas) {
+            const img = new Image();
+            img.onload = function () {
+                const src = document.createElement('canvas');
+                src.width = 64;
+                src.height = 64;
+                const s = src.getContext('2d');
+                s.imageSmoothingEnabled = false;
+                if (img.height === 32) {
+                    s.drawImage(img, 0, 0);
+                    s.drawImage(img, 0, 16, 16, 16, 16, 48, 16, 16);
+                    s.drawImage(img, 40, 16, 16, 16, 32, 48, 16, 16);
+                } else {
+                    s.drawImage(img, 0, 0, 64, 64);
+                }
+                const ctx = canvas.getContext('2d');
+                ctx.imageSmoothingEnabled = false;
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                const scale = 8;
+                const x = 32;
+                ctx.drawImage(src, 8, 8, 8, 8, x, 8, 8 * scale, 8 * scale);
+                ctx.drawImage(src, 40, 8, 8, 8, x, 8, 8 * scale, 8 * scale);
+                ctx.drawImage(src, 20, 20, 8, 12, x, 8 + 8 * scale, 8 * scale, 12 * scale);
+                ctx.drawImage(src, 44, 20, 8, 12, x, 8 + 8 * scale, 8 * scale, 12 * scale);
+                ctx.drawImage(src, 44, 20, 4, 12, x - 4 * scale, 8 + 8 * scale, 4 * scale, 12 * scale);
+                ctx.drawImage(src, 36, 52, 4, 12, x + 8 * scale, 8 + 8 * scale, 4 * scale, 12 * scale);
+                ctx.drawImage(src, 4, 20, 4, 12, x, 8 + 20 * scale, 4 * scale, 12 * scale);
+                ctx.drawImage(src, 20, 52, 4, 12, x + 4 * scale, 8 + 20 * scale, 4 * scale, 12 * scale);
+            };
+            img.src = dataUrl;
+        }
+
+        function dataUrlToUint8(dataUrl) {
+            const b64 = String(dataUrl).split(",")[1];
+            if (!b64) return null;
+            const bin = atob(b64);
+            const out = new Uint8Array(bin.length);
+            for (let i = 0; i < bin.length; i++) out[i] = bin.charCodeAt(i);
+            return out;
+        }
+
+        async function prepararSkinParaJuego() {
+            window._logicraftPendingSkin = null;
+            if (!_selectedSkin || !_selectedSkin.pngBase64) return;
+            const packed = await pngToEaglerSkinBytes(_selectedSkin.pngBase64);
+            window._logicraftPendingSkin = {
+                name: (_selectedSkin.name || "LogiCraft").substring(0, 16),
+                model: _selectedSkin.model === "alex" ? "alex" : "steve",
+                bytes: packed.bytes,
+                pngBytes: packed.pngBytes
+            };
+        }
+
+        function pngToEaglerSkinBytes(dataUrl) {
+            return new Promise(function (resolve, reject) {
+                const img = new Image();
+                img.onload = function () {
+                    const srcW = img.width;
+                    const srcH = img.height;
+                    const legacy = srcH * 2 === srcW;
+                    const modern = srcW === srcH;
+                    if (!srcW || (!legacy && !modern) || srcW % 64 !== 0) {
+                        reject(new Error("La skin debe ser 64x64, 64x32 o un múltiplo (128x128)"));
+                        return;
+                    }
+                    const c = document.createElement('canvas');
+                    c.width = 64;
+                    c.height = 64;
+                    const ctx = c.getContext('2d');
+                    ctx.imageSmoothingEnabled = false;
+                    if (legacy) {
+                        ctx.drawImage(img, 0, 0, srcW, srcH, 0, 0, 64, 32);
+                        ctx.drawImage(c, 0, 16, 16, 16, 16, 48, 16, 16);
+                        ctx.drawImage(c, 40, 16, 16, 16, 32, 48, 16, 16);
+                    } else {
+                        ctx.drawImage(img, 0, 0, srcW, srcH, 0, 0, 64, 64);
+                    }
+                    const rgba = ctx.getImageData(0, 0, 64, 64).data;
+                    const out = new Int8Array(16384);
+                    for (let i = 0; i < 4096; i++) {
+                        const p = i * 4;
+                        out[p] = rgba[p + 3];
+                        out[p + 1] = rgba[p + 2];
+                        out[p + 2] = rgba[p + 1];
+                        out[p + 3] = rgba[p];
+                    }
+                    for (let y = 20; y < 32; y++) {
+                        for (let x = 16; x < 40; x++) out[(y << 8) | (x << 2)] = -1;
+                    }
+                    resolve({
+                        bytes: out,
+                        pngBytes: dataUrlToUint8(c.toDataURL("image/png"))
+                    });
+                };
+                img.onerror = reject;
+                img.src = dataUrl;
+            });
+        }
+
+        async function entrarAlJuego() {
+            document.getElementById('pantalla-hub').style.display = 'none';
+            try {
+                await prepararSkinParaJuego();
+            } catch (e) {
+                console.error("Skin:", e);
+                window._logicraftPendingSkin = null;
+            }
+            await iniciarMotorJuego(_internalUsername, _pendingPwdHash);
         }
 
         function quitarCarga() {
@@ -550,7 +1162,7 @@
 
         async function cargarPaqueteDefault() {
             if (window._logicraftDefaultPack && window._logicraftDefaultPack.length) return;
-            const res = await fetch("defaultpack.zip");
+            const res = await fetch("defaultpack.zip?v=nosteve2");
             if (!res.ok) throw new Error("No se pudo cargar defaultpack.zip");
             window._logicraftDefaultPack = new Uint8Array(await res.arrayBuffer());
         }
@@ -575,6 +1187,7 @@
                 assetsURI: "assets.epk",
                 localesURI: "lang/",
                 worldsDB: "worlds",
+                joinServer: wssUrl,
                 fixedUsername: user,
                 allowVoiceClient: false,
                 enableDownloadOfflineButton: false,
