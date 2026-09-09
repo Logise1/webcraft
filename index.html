@@ -226,6 +226,134 @@
             box-shadow: 0 4px 12px rgba(46, 125, 50, 0.3);
         }
 
+        .login-error-badge {
+            display: none;
+            align-items: center;
+            gap: 10px;
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid rgba(239, 68, 68, 0.4);
+            color: #fca5a5;
+            padding: 11px 14px;
+            border-radius: 10px;
+            font-size: 13.5px;
+            font-weight: 500;
+            margin-bottom: 16px;
+            text-align: left;
+            line-height: 1.35;
+            backdrop-filter: blur(8px);
+        }
+
+        @keyframes errorShake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-5px); }
+            40%, 80% { transform: translateX(5px); }
+        }
+
+        .shake {
+            animation: errorShake 0.4s ease-in-out;
+        }
+
+        .btn-spinner {
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            border: 2px solid rgba(255, 255, 255, 0.35);
+            border-top-color: #ffffff;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            vertical-align: middle;
+            margin-right: 6px;
+        }
+
+        .register-prompt-box {
+            display: none;
+            flex-direction: column;
+            gap: 12px;
+            background: linear-gradient(135deg, rgba(76, 175, 80, 0.16) 0%, rgba(27, 94, 32, 0.26) 100%);
+            border: 1px solid rgba(76, 175, 80, 0.5);
+            border-radius: 12px;
+            padding: 14px 16px;
+            margin-bottom: 16px;
+            text-align: left;
+            animation: fadeIn 0.3s ease-out;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(8px);
+        }
+
+        .register-prompt-content {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .register-prompt-icon {
+            font-size: 24px;
+            line-height: 1;
+        }
+
+        .register-prompt-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #4ade80;
+            margin-bottom: 2px;
+        }
+
+        .register-prompt-desc {
+            font-size: 12.5px;
+            color: #cbd5e1;
+            margin: 0;
+            line-height: 1.35;
+        }
+
+        .register-prompt-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 2px;
+        }
+
+        .btn-create-acc {
+            flex: 1;
+            padding: 10px 14px;
+            background: linear-gradient(135deg, #43A047 0%, #2E7D32 100%);
+            border: none;
+            border-radius: 8px;
+            color: #ffffff;
+            font-size: 13.5px;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: inherit;
+            box-shadow: 0 4px 12px rgba(46, 125, 50, 0.35);
+            transition: all 0.2s ease;
+        }
+
+        .btn-create-acc:hover {
+            background: linear-gradient(135deg, #4CAF50 0%, #388E3C 100%);
+            transform: translateY(-1px);
+            box-shadow: 0 6px 14px rgba(76, 175, 80, 0.45);
+        }
+
+        .btn-create-acc:active {
+            transform: translateY(0);
+        }
+
+        .btn-cancel-create {
+            padding: 10px 14px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 8px;
+            color: #94a3b8;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: inherit;
+            transition: all 0.2s ease;
+        }
+
+        .btn-cancel-create:hover {
+            background: rgba(255, 255, 255, 0.15);
+            color: #f1f5f9;
+        }
+
         /* Pantalla de carga */
         #mi-pantalla-carga {
             position: fixed;
@@ -549,6 +677,17 @@
             color: #fff;
         }
 
+        .skin-scroll-loader {
+            display: none;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 0 6px;
+            color: #4ade80;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
         @media (max-width: 860px) {
             .hub-shell {
                 grid-template-columns: 1fr;
@@ -590,18 +729,32 @@
 
             <!-- Formulario de Login Normal -->
             <div id="view-normal-login" style="display: none;">
+                <div id="login-error-msg" class="login-error-badge"></div>
+                <div id="login-register-prompt" class="register-prompt-box">
+                    <div class="register-prompt-content">
+                        <span class="register-prompt-icon">✨</span>
+                        <div>
+                            <div class="register-prompt-title">¿Crear esta cuenta?</div>
+                            <p class="register-prompt-desc">El usuario <strong id="register-target-user" style="color:#ffffff;"></strong> no existe. ¿Quieres registrarlo y entrar ahora?</p>
+                        </div>
+                    </div>
+                    <div class="register-prompt-actions">
+                        <button type="button" class="btn-create-acc" onclick="crearCuentaYEntrar()">Sí, crear cuenta</button>
+                        <button type="button" class="btn-cancel-create" onclick="limpiarPromptRegistro()">Cancelar</button>
+                    </div>
+                </div>
                 <form id="view-form" onsubmit="event.preventDefault(); iniciarSesion();">
                     <div class="input-group">
                         <label class="input-label" for="username">Usuario</label>
-                        <input type="text" id="username" class="clean-input" placeholder="Ingresa tu usuario" autocomplete="off" required>
+                        <input type="text" id="username" class="clean-input" placeholder="Ingresa tu usuario" autocomplete="off" oninput="limpiarErrorLogin(); limpiarPromptRegistro();" required>
                     </div>
 
                     <div class="input-group">
                         <label class="input-label" for="password">Contraseña</label>
-                        <input type="password" id="password" class="clean-input" placeholder="••••••••" required>
+                        <input type="password" id="password" class="clean-input" placeholder="••••••••" oninput="limpiarErrorLogin(); limpiarPromptRegistro();" required>
                     </div>
 
-                    <button type="submit" class="play-btn">JUGAR</button>
+                    <button type="submit" id="btn-iniciar-sesion" class="play-btn">JUGAR</button>
                 </form>
             </div>
         </div>
@@ -629,12 +782,13 @@
                 <div class="hub-toolbar">
                     <input type="text" id="skin-search" class="clean-input" placeholder="Buscar por contenido: dragón, ninja, gato, enderman..." maxlength="40" onkeydown="if(event.key==='Enter'){event.preventDefault();buscarSkinsMundo();}">
                     <button type="button" class="play-btn" onclick="buscarSkinsMundo()">Buscar</button>
-                    <button type="button" class="btn-secondary" onclick="document.getElementById('skin-file').click()">Subir PNG</button>
-                    <input type="file" id="skin-file" accept="image/png" style="display:none" onchange="subirSkinArchivo(event)">
                 </div>
                 <div class="skin-cats" id="skin-cats"></div>
                 <div class="hub-status" id="hub-status">Busca skins por tema o elige una categoría.</div>
                 <div class="skin-grid" id="skin-grid"></div>
+                <div id="skin-scroll-loader" class="skin-scroll-loader">
+                    <span class="btn-spinner"></span> Cargando más skins trending...
+                </div>
             </section>
         </div>
     </div>
@@ -648,6 +802,7 @@
 
     <div id="game_frame"></div>
 
+    <script src="skins_precargadas.js"></script>
     <script>
         let _internalUsername = "Jugador";
         let _savedSessionData = null;
@@ -656,8 +811,13 @@
         let _pendingPwdHash = "";
         let _selectedSkin = null;
         let _hubSkinResults = [];
-        let _skinCatActiva = "";
+        let _skinCatActiva = "all";
+        let _skinLastRef = "";
+        let _skinLoadingMore = false;
+        let _skinHasMore = true;
+        let _skinCurrentQuery = "all";
         const SKINS_CATEGORIAS = [
+            { q: "all", label: "🔥 All Skins" },
             { q: "dragon", label: "Dragón" },
             { q: "ninja", label: "Ninja" },
             { q: "gato", label: "Gato" },
@@ -712,14 +872,31 @@
             if (_savedSessionData && _savedSessionData.user && _savedSessionData.pwdHash) {
                 _internalUsername = _savedSessionData.user;
                 _pendingPwdHash = _savedSessionData.pwdHash;
+
+                // Recrear token si no está presente o está expirado
+                const token = localStorage.getItem('webcraft_token');
+                const pwd = _savedSessionData.pwd || localStorage.getItem('webcraft_pwd');
+                if (!token && pwd) {
+                    try {
+                        await obtenerToken(_savedSessionData.user, pwd);
+                    } catch (e) {
+                        console.warn("No se pudo obtener token con sesión guardada:", e);
+                    }
+                }
+
                 document.getElementById('pantalla-login').style.display = 'none';
                 mostrarHub();
             }
         }
 
+        let _pendingNewUser = "";
+        let _pendingNewPass = "";
+
         function cerrarSesionGuardada() {
             try { localStorage.clear(); } catch (e) { console.error("Error al borrar localStorage:", e); }
             _savedSessionData = null;
+            limpiarErrorLogin();
+            limpiarPromptRegistro();
             document.getElementById('view-saved-session').style.display = 'none';
             document.getElementById('view-normal-login').style.display = 'block';
             const u = document.getElementById('username');
@@ -734,14 +911,23 @@
             location.reload();
         }
 
-        function guardarSesion(user, pwdHash) {
+        function guardarSesion(user, pwdHash, pwd, token) {
             try {
                 const sessionObj = {
                     user: user,
                     pwdHash: pwdHash,
+                    pwd: pwd || "",
+                    token: token || "",
                     savedAt: Date.now()
                 };
                 localStorage.setItem('logicraft_saved_session', JSON.stringify(sessionObj));
+                localStorage.setItem('webcraft_user', user);
+                if (pwd) {
+                    localStorage.setItem('webcraft_pwd', pwd);
+                }
+                if (token) {
+                    localStorage.setItem('webcraft_token', token);
+                }
             } catch (e) { console.error("Error guardando sesión:", e); }
         }
 
@@ -763,6 +949,314 @@
             if (toast) toast.style.display = 'none';
         }
 
+        function mostrarErrorLogin(msg) {
+            const errEl = document.getElementById('login-error-msg');
+            if (errEl) {
+                errEl.innerHTML = `<span style="font-size:16px;line-height:1;">⚠️</span><span>${msg}</span>`;
+                errEl.style.display = 'flex';
+                errEl.classList.remove('shake');
+                void errEl.offsetWidth;
+                errEl.classList.add('shake');
+            }
+        }
+
+        function limpiarErrorLogin() {
+            const errEl = document.getElementById('login-error-msg');
+            if (errEl) {
+                errEl.style.display = 'none';
+                errEl.innerHTML = '';
+            }
+        }
+
+        function mostrarPromptRegistro(user, pass) {
+            _pendingNewUser = user;
+            _pendingNewPass = pass;
+            limpiarErrorLogin();
+            const promptEl = document.getElementById('login-register-prompt');
+            const targetUserEl = document.getElementById('register-target-user');
+            if (targetUserEl) targetUserEl.textContent = user;
+            if (promptEl) {
+                promptEl.style.display = 'flex';
+                promptEl.classList.remove('shake');
+                void promptEl.offsetWidth;
+                promptEl.classList.add('shake');
+            }
+        }
+
+        function limpiarPromptRegistro() {
+            _pendingNewUser = "";
+            _pendingNewPass = "";
+            const promptEl = document.getElementById('login-register-prompt');
+            if (promptEl) {
+                promptEl.style.display = 'none';
+            }
+        }
+
+        // 1. Iniciar sesión y obtener token
+        async function obtenerToken(username, pwd) {
+          const res = await fetch('https://webcraft.arielcapdevila.com/api/token', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username, pwd })
+          });
+          const data = await res.json();
+          if (data.success) {
+            localStorage.setItem('webcraft_token', data.token);
+            return data.token;
+          }
+          throw new Error(data.error);
+        }
+
+        // 2. Obtener datos del jugador
+        async function verDatosJugador(token) {
+          const res = await fetch('https://webcraft.arielcapdevila.com/api/player/data', {
+            headers: { 'Authorization': `Bearer ${token}` }
+          });
+          return await res.json();
+        }
+
+        // 3. Guardar datos del jugador (máx 1KB)
+        async function guardarDatosJugador(token, misDatos) {
+          const res = await fetch('https://webcraft.arielcapdevila.com/api/player/data', {
+            method: 'POST',
+            headers: {
+              'Authorization': `Bearer ${token}`,
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(misDatos)
+          });
+          return await res.json();
+        }
+
+        // Helper para asegurar o recrear token si expiró o no existe
+        async function asegurarToken() {
+          let token = localStorage.getItem('webcraft_token');
+          if (!token) {
+            const u = localStorage.getItem('webcraft_user');
+            const p = localStorage.getItem('webcraft_pwd');
+            if (u && p) {
+              try {
+                token = await obtenerToken(u, p);
+              } catch (e) {
+                console.warn("No se pudo regenerar token:", e);
+              }
+            }
+          }
+          return token;
+        }
+
+        function mostrarErrorTopLeft(msg) {
+            let el = document.getElementById('toast-error-top-left');
+            if (!el) {
+                el = document.createElement('div');
+                el.id = 'toast-error-top-left';
+                el.style.position = 'fixed';
+                el.style.top = '16px';
+                el.style.left = '16px';
+                el.style.zIndex = '9999999';
+                el.style.background = 'rgba(220, 38, 38, 0.95)';
+                el.style.backdropFilter = 'blur(6px)';
+                el.style.color = '#ffffff';
+                el.style.fontFamily = "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif";
+                el.style.fontSize = '13px';
+                el.style.fontWeight = '600';
+                el.style.padding = '8px 14px';
+                el.style.borderRadius = '6px';
+                el.style.boxShadow = '0 4px 14px rgba(0,0,0,0.4)';
+                el.style.display = 'flex';
+                el.style.alignItems = 'center';
+                el.style.gap = '8px';
+                el.style.pointerEvents = 'none';
+                el.style.transition = 'opacity 0.25s ease, transform 0.25s ease';
+                document.body.appendChild(el);
+            }
+            el.innerHTML = `<span style="font-size:15px;line-height:1;">⚠️</span><span>${msg}</span>`;
+            el.style.opacity = '1';
+            el.style.transform = 'translateY(0)';
+            el.style.display = 'flex';
+
+            if (window._toastErrorTimeout) clearTimeout(window._toastErrorTimeout);
+            window._toastErrorTimeout = setTimeout(() => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(-6px)';
+                setTimeout(() => { if (el) el.style.display = 'none'; }, 250);
+            }, 3500);
+        }
+
+        async function guardarSkinEnServidorConRetries(skin) {
+            skin = skin || _selectedSkin;
+            if (!skin) return;
+
+            const maxRetries = 3;
+            let intento = 0;
+            let guardadoExitoso = false;
+
+            while (intento < maxRetries && !guardadoExitoso) {
+                intento++;
+                try {
+                    let token = localStorage.getItem('webcraft_token');
+                    if (!token) {
+                        token = await asegurarToken();
+                    }
+                    if (!token) {
+                        throw new Error("No hay token disponible");
+                    }
+
+                    const skinPayload = {
+                        name: String(skin.name || "Skin").substring(0, 24),
+                        model: skin.model === "alex" ? "alex" : "steve"
+                    };
+
+                    if (skin.textureUrl) {
+                        skinPayload.textureUrl = skin.textureUrl;
+                    }
+                    if (skin.previewUser) {
+                        skinPayload.previewUser = skin.previewUser;
+                    }
+
+                    const misDatos = {
+                        skin: skinPayload,
+                        updatedAt: Date.now()
+                    };
+
+                    let res = await guardarDatosJugador(token, misDatos);
+
+                    // Si el token expiró, recrearlo automáticamente con username y pwd guardados
+                    if (res && res.error && (res.error.includes('Token') || res.error.includes('expirado'))) {
+                        const u = localStorage.getItem('webcraft_user');
+                        const p = localStorage.getItem('webcraft_pwd');
+                        if (u && p) {
+                            token = await obtenerToken(u, p);
+                            if (token) {
+                                res = await guardarDatosJugador(token, misDatos);
+                            }
+                        }
+                    }
+
+                    if (res && res.success !== false && !res.error) {
+                        console.log(`Skin guardada en el servidor exitosamente (intento ${intento}):`, res);
+                        guardadoExitoso = true;
+                        return;
+                    } else {
+                        throw new Error((res && res.error) || "Error al guardar en el servidor");
+                    }
+                } catch (err) {
+                    console.warn(`Intento ${intento}/${maxRetries} de guardar skin falló:`, err);
+                    if (intento < maxRetries) {
+                        await new Promise(resolve => setTimeout(resolve, 5000));
+                    }
+                }
+            }
+
+            if (!guardadoExitoso) {
+                console.error("Fallaron los 3 intentos de guardar la skin en el servidor.");
+                mostrarErrorTopLeft("Error saving skin");
+            }
+        }
+
+        async function sincronizarSkinDesdeServidor() {
+            let token = localStorage.getItem('webcraft_token');
+            if (!token) {
+                token = await asegurarToken();
+            }
+            if (!token) return;
+
+            try {
+                let res = await verDatosJugador(token);
+                // Si el token expiró, recrearlo automáticamente con username y pwd guardados
+                if (res && res.error && (res.error.includes('Token') || res.error.includes('expirado'))) {
+                    const u = localStorage.getItem('webcraft_user');
+                    const p = localStorage.getItem('webcraft_pwd');
+                    if (u && p) {
+                        token = await obtenerToken(u, p);
+                        if (token) {
+                            res = await verDatosJugador(token);
+                        }
+                    }
+                }
+                if (!res) return;
+
+                const data = (res.data !== undefined) ? res.data : res;
+                const remoteSkin = data && data.skin;
+                if (!remoteSkin) return;
+
+                // Si ya coincide la textura y modelo localmente, no re-descargar
+                if (_selectedSkin && remoteSkin.textureUrl && _selectedSkin.textureUrl === remoteSkin.textureUrl && _selectedSkin.model === remoteSkin.model) {
+                    return;
+                }
+
+                if (remoteSkin.textureUrl) {
+                    try {
+                        const blob = await fetchConCors(remoteSkin.textureUrl, false);
+                        const pngBase64 = await blobToBase64(blob);
+                        aplicarSkinSeleccionada({
+                            name: remoteSkin.name || "Skin",
+                            model: remoteSkin.model === "alex" ? "alex" : "steve",
+                            pngBase64: pngBase64,
+                            textureUrl: remoteSkin.textureUrl,
+                            previewUser: remoteSkin.previewUser || null
+                        }, false);
+                        if (_selectedSkin && _selectedSkin.pngBase64) {
+                            localStorage.setItem('logicraft_selected_skin', JSON.stringify(_selectedSkin));
+                        }
+                    } catch (e) {
+                        console.warn("Error descargando textura remota de skin:", e);
+                    }
+                } else if (remoteSkin.previewUser) {
+                    aplicarSkinSeleccionada({
+                        name: remoteSkin.name || remoteSkin.previewUser,
+                        model: remoteSkin.model === "alex" ? "alex" : "steve",
+                        pngBase64: null,
+                        textureUrl: null,
+                        previewUser: remoteSkin.previewUser
+                    }, false);
+                } else if (remoteSkin.model) {
+                    setSkinModel(remoteSkin.model);
+                }
+            } catch (e) {
+                console.warn("Error al sincronizar skin con servidor:", e);
+            }
+        }
+
+        async function crearCuentaYEntrar() {
+            if (!_pendingNewUser || !_pendingNewPass) return;
+            const user = _pendingNewUser;
+            const pass = _pendingNewPass;
+
+            const btnCreate = document.querySelector('.btn-create-acc');
+            const origText = btnCreate ? btnCreate.innerHTML : "Sí, crear cuenta";
+            if (btnCreate) {
+                btnCreate.disabled = true;
+                btnCreate.innerHTML = `<span class="btn-spinner"></span> ENTRANDO...`;
+            }
+
+            try {
+                const pwdHash = await sha256(pass);
+                _internalUsername = user;
+                _pendingPwdHash = pwdHash;
+
+                let token = null;
+                try {
+                    token = await obtenerToken(user, pass);
+                } catch (tokErr) {
+                    console.warn("Token err:", tokErr);
+                }
+
+                guardarSesion(user, pwdHash, pass, token);
+
+                limpiarErrorLogin();
+                limpiarPromptRegistro();
+
+                document.getElementById('pantalla-login').style.display = 'none';
+                mostrarHub();
+            } finally {
+                if (btnCreate) {
+                    btnCreate.disabled = false;
+                    btnCreate.innerHTML = origText;
+                }
+            }
+        }
+
         async function sha256(message) {
             const msgUint8 = new TextEncoder().encode(message);
             const hashBuffer = await crypto.subtle.digest('SHA-256', msgUint8);
@@ -771,24 +1265,108 @@
         }
 
         async function iniciarSesion() {
-            const user = document.getElementById('username').value.trim();
-            const pass = document.getElementById('password').value;
+            const userEl = document.getElementById('username');
+            const passEl = document.getElementById('password');
+            const btnSubmit = document.getElementById('btn-iniciar-sesion');
+
+            const user = userEl ? userEl.value.trim() : '';
+            const pass = passEl ? passEl.value : '';
+
+            limpiarErrorLogin();
+            limpiarPromptRegistro();
 
             if (!user || !pass) {
-                alert("Por favor ingresa usuario y contraseña.");
+                mostrarErrorLogin("Por favor ingresa usuario y contraseña.");
                 return;
             }
 
-            _internalUsername = user;
-            const pwdHash = await sha256(pass);
-            guardarSesion(user, pwdHash);
-            _pendingPwdHash = pwdHash;
+            const textoOriginal = btnSubmit ? btnSubmit.innerHTML : "JUGAR";
+            if (btnSubmit) {
+                btnSubmit.disabled = true;
+                btnSubmit.innerHTML = `<span class="btn-spinner"></span> VERIFICANDO...`;
+                btnSubmit.style.opacity = "0.75";
+                btnSubmit.style.cursor = "not-allowed";
+            }
 
-            document.getElementById('pantalla-login').style.display = 'none';
-            mostrarHub();
+            try {
+                const endpoint = `https://webcraft.arielcapdevila.com/api/auth?username=${encodeURIComponent(user)}&pwd=${encodeURIComponent(pass)}`;
+                const resp = await fetch(endpoint, {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
+
+                let data = null;
+                try {
+                    data = await resp.json();
+                } catch (jsonErr) {
+                    console.error("Error parseando respuesta JSON:", jsonErr);
+                }
+
+                if (data && (data.success === true || data.correct === true)) {
+                    const finalUser = data.username || user;
+                    _internalUsername = finalUser;
+                    const pwdHash = await sha256(pass);
+                    _pendingPwdHash = pwdHash;
+
+                    // El endpoint de /api/auth retorna el token directamente
+                    let token = data.token || null;
+                    if (token) {
+                        localStorage.setItem('webcraft_token', token);
+                    }
+                    guardarSesion(finalUser, pwdHash, pass, token);
+
+                    if (!token) {
+                        try {
+                            token = await obtenerToken(finalUser, pass);
+                        } catch (tokErr) {
+                            console.warn("Token err:", tokErr);
+                        }
+                    }
+
+                    limpiarPromptRegistro();
+                    document.getElementById('pantalla-login').style.display = 'none';
+                    mostrarHub();
+                } else if (data) {
+                    if (data.exists === false) {
+                        // Usuario no existe -> sugerir crear la cuenta
+                        mostrarPromptRegistro(user, pass);
+                    } else {
+                        limpiarPromptRegistro();
+                        const errorMsg = data.message || "Contraseña incorrecta.";
+                        mostrarErrorLogin(errorMsg);
+
+                        if (passEl) {
+                            passEl.value = '';
+                            passEl.focus();
+                        }
+                    }
+                } else {
+                    limpiarPromptRegistro();
+                    if (resp.status === 429) {
+                        mostrarErrorLogin("Demasiadas solicitudes. Por favor espera unos segundos.");
+                    } else {
+                        mostrarErrorLogin("Error en el servidor de autenticación. Intenta nuevamente.");
+                    }
+                }
+            } catch (err) {
+                console.error("Error al conectar con la API de autenticación:", err);
+                limpiarPromptRegistro();
+                mostrarErrorLogin("No se pudo conectar con el servidor de autenticación. Verifica tu conexión e intenta nuevamente.");
+            } finally {
+                if (btnSubmit) {
+                    btnSubmit.disabled = false;
+                    btnSubmit.innerHTML = textoOriginal;
+                    btnSubmit.style.opacity = "1";
+                    btnSubmit.style.cursor = "pointer";
+                }
+            }
         }
 
         function volverAlLogin() {
+            limpiarErrorLogin();
+            limpiarPromptRegistro();
             document.getElementById('pantalla-hub').style.display = 'none';
             document.getElementById('pantalla-login').style.display = 'flex';
         }
@@ -798,7 +1376,9 @@
             document.getElementById('pantalla-hub').style.display = 'block';
             pintarCategoriasSkin();
             restaurarSkinGuardada();
-            buscarSkinsMundo("");
+            sincronizarSkinDesdeServidor();
+            buscarSkinsMundo("all");
+            initInfiniteScrollSkins();
         }
 
         function setSkinModel(model) {
@@ -849,8 +1429,14 @@
         }
 
         function buscarCategoriaSkin(q) {
-            document.getElementById('skin-search').value = q;
-            buscarSkinsMundo(q);
+            const s = document.getElementById('skin-search');
+            if (q === "all") {
+                if (s) s.value = "";
+                buscarSkinsMundo("all");
+            } else {
+                if (s) s.value = q;
+                buscarSkinsMundo(q);
+            }
         }
 
         function pintarGaleriaSkins(items, status) {
@@ -858,6 +1444,7 @@
             const grid = document.getElementById('skin-grid');
             const st = document.getElementById('hub-status');
             if (status) st.textContent = status;
+            if (!grid) return;
             if (!_hubSkinResults.length) {
                 grid.innerHTML = "";
                 return;
@@ -869,6 +1456,101 @@
                     '<div class="skin-card-face" style="background-image:url(\'' + tex.replace(/'/g, "") + '\')"></div>' +
                     '<span>' + name + '</span></button>';
             }).join("");
+            grid.scrollTop = 0;
+        }
+
+        function agregarSkinsAGaleria(newItems) {
+            const grid = document.getElementById('skin-grid');
+            if (!grid) return;
+            const startIndex = _hubSkinResults.length;
+            _hubSkinResults = _hubSkinResults.concat(newItems);
+
+            const fragment = document.createDocumentFragment();
+            newItems.forEach(function (item, i) {
+                const globalIndex = startIndex + i;
+                const name = escapeHtmlSkin(item.name || "Skin");
+                const tex = textureHttps(item.textureUrl);
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = 'skin-card';
+                btn.onclick = function () { elegirSkinGaleria(globalIndex); };
+                btn.innerHTML = '<div class="skin-card-face" style="background-image:url(\'' + tex.replace(/'/g, "") + '\')"></div>' +
+                    '<span>' + name + '</span>';
+                fragment.appendChild(btn);
+            });
+            grid.appendChild(fragment);
+        }
+
+        function initInfiniteScrollSkins() {
+            const grid = document.getElementById('skin-grid');
+            if (!grid || grid._infiniteScrollBound) return;
+            grid._infiniteScrollBound = true;
+
+            grid.addEventListener('scroll', function () {
+                if (_skinLoadingMore || !_skinHasMore) return;
+                if (grid.scrollTop + grid.clientHeight >= grid.scrollHeight - 160) {
+                    cargarMasSkins();
+                }
+            });
+        }
+
+        async function cargarMasSkins() {
+            if (_skinLoadingMore || !_skinHasMore) return;
+            _skinLoadingMore = true;
+
+            const loader = document.getElementById('skin-scroll-loader');
+            if (loader) loader.style.display = 'flex';
+
+            try {
+                const isAll = (_skinCurrentQuery === "all" || !_skinCurrentQuery);
+                const ref = _skinLastRef || "0";
+                const endpoint = isAll
+                    ? "https://api.mineskin.org/get/list/" + encodeURIComponent(ref)
+                    : "https://api.mineskin.org/get/list/" + encodeURIComponent(ref) + "?filter=" + encodeURIComponent(_skinCurrentQuery);
+
+                const data = await fetchConCors(endpoint, true);
+                const skins = (data && data.skins) ? data.skins : [];
+
+                if (!skins.length) {
+                    _skinHasMore = false;
+                } else {
+                    const newLastUuid = skins[skins.length - 1].uuid || skins[skins.length - 1].skinUuid || "";
+                    if (newLastUuid === _skinLastRef) {
+                        _skinHasMore = false;
+                    } else {
+                        _skinLastRef = newLastUuid;
+                    }
+
+                    const items = skins.map(function (s) {
+                        const isSlim = (s.variant === "slim" || s.model === "slim");
+                        return {
+                            name: (s.name && String(s.name).trim()) || (isAll ? "Skin popular" : _skinCurrentQuery),
+                            textureUrl: s.url,
+                            model: isSlim ? "alex" : "steve",
+                            id: s.id,
+                            uuid: s.uuid || s.skinUuid
+                        };
+                    }).filter(function (s) {
+                        return !!s.textureUrl && !textoSkinInapropiado(s.name);
+                    });
+
+                    if (items.length) {
+                        agregarSkinsAGaleria(items);
+                        const st = document.getElementById('hub-status');
+                        if (st) {
+                            st.textContent = isAll
+                                ? "🔥 All Skins (" + _hubSkinResults.length + " skins). Desliza hacia abajo para más."
+                                : "Skins de \"" + _skinCurrentQuery + "\" (" + _hubSkinResults.length + " skins). Desliza hacia abajo para más.";
+                        }
+                    }
+                }
+            } catch (e) {
+                console.error("Error cargando más skins:", e);
+                _skinHasMore = false;
+            } finally {
+                _skinLoadingMore = false;
+                if (loader) loader.style.display = 'none';
+            }
         }
 
         async function fetchConCors(url, asJson) {
@@ -881,7 +1563,10 @@
             let lastErr = null;
             for (let i = 0; i < attempts.length; i++) {
                 try {
-                    const res = await fetch(attempts[i], { cache: "no-store" });
+                    const res = await fetch(attempts[i], {
+                        cache: "no-store",
+                        headers: { 'Accept': 'application/json' }
+                    });
                     if (!res.ok) throw new Error("http " + res.status);
                     return asJson ? await res.json() : await res.blob();
                 } catch (e) {
@@ -908,45 +1593,102 @@
         }
 
         async function buscarSkinsMundo(forcedQuery) {
-            const raw = (forcedQuery != null ? forcedQuery : document.getElementById('skin-search').value).trim();
+            const searchInput = document.getElementById('skin-search');
+            let raw = (forcedQuery != null ? forcedQuery : (searchInput ? searchInput.value : "")).trim();
             const st = document.getElementById('hub-status');
-            if (raw && !esBusquedaSegura(raw)) {
+
+            if (!raw) raw = "all";
+
+            if (raw.toLowerCase() !== "all" && !esBusquedaSegura(raw)) {
                 _skinCatActiva = "";
                 pintarCategoriasSkin();
                 pintarGaleriaSkins([], "Esa búsqueda no está permitida. Prueba un tema como ninja, gato o dragón.");
                 return;
             }
+
             const q = raw;
-            _skinCatActiva = q.toLowerCase();
+            const isAll = (q.toLowerCase() === "all");
+            _skinCurrentQuery = isAll ? "all" : q;
+            _skinCatActiva = _skinCurrentQuery;
+            _skinLastRef = "";
+            _skinHasMore = true;
+            _skinLoadingMore = false;
+
             pintarCategoriasSkin();
-            st.textContent = q ? ("Buscando skins de \"" + q + "\"...") : "Cargando skins recomendadas...";
+
+            // 1. Si es "All Skins" y tenemos skins precargadas, usarlas de inmediato
+            const precargadas = window.SKINS_PRECARGADAS || [];
+            if (isAll && precargadas.length) {
+                pintarGaleriaSkins(precargadas, "🔥 All Skins (" + precargadas.length + " skins populares precargadas). Desliza hacia abajo para explorar.");
+                initInfiniteScrollSkins();
+                return;
+            }
+
+            // 2. Si es una categoría o búsqueda que tiene skins en la lista precargada
+            if (!isAll && precargadas.length) {
+                const k = q.toLowerCase();
+                const matched = precargadas.filter(function (s) {
+                    return (s.category && s.category.toLowerCase() === k) || (s.name && s.name.toLowerCase().includes(k));
+                });
+                if (matched.length >= 6) {
+                    pintarGaleriaSkins(matched, "Skins de \"" + q + "\" (" + matched.length + " skins encontradas).");
+                    initInfiniteScrollSkins();
+                    return;
+                }
+            }
+
+            // 3. De lo contrario, buscar en MineSkin API
+            if (st) {
+                st.textContent = isAll ? "Cargando skins populares..." : ("Buscando skins de \"" + q + "\"...");
+            }
+
+            const grid = document.getElementById('skin-grid');
+            if (grid) {
+                grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:30px;color:#94a3b8;"><span class="btn-spinner" style="width:20px;height:20px;border-width:3px;"></span> Cargando skins...</div>';
+            }
+
             try {
-                const endpoint = q
-                    ? "https://api.mineskin.org/get/list/0?filter=" + encodeURIComponent(q)
-                    : "https://api.mineskin.org/get/list/0?filter=steve";
+                const endpoint = isAll
+                    ? "https://api.mineskin.org/get/list/0"
+                    : "https://api.mineskin.org/get/list/0?filter=" + encodeURIComponent(q);
+
                 const data = await fetchConCors(endpoint, true);
                 const skins = (data && data.skins) ? data.skins : [];
+
+                if (skins.length) {
+                    _skinLastRef = skins[skins.length - 1].uuid || skins[skins.length - 1].skinUuid || "";
+                }
+
                 const items = skins.map(function (s) {
+                    const isSlim = (s.variant === "slim" || s.model === "slim");
                     return {
-                        name: (s.name && String(s.name).trim()) || (q ? q : "Steve"),
+                        name: (s.name && String(s.name).trim()) || (isAll ? "Skin popular" : q),
                         textureUrl: s.url,
-                        model: (s.model === "slim" || s.variant === "slim") ? "alex" : "steve",
-                        id: s.id
+                        model: isSlim ? "alex" : "steve",
+                        id: s.id,
+                        uuid: s.uuid || s.skinUuid
                     };
                 }).filter(function (s) {
                     return !!s.textureUrl && !textoSkinInapropiado(s.name);
                 });
+
                 if (!items.length) {
-                    pintarGaleriaSkins([], q
-                        ? ("No hay skins aptas para \"" + q + "\". Prueba otra palabra: ninja, gato, dragón...")
-                        : "No hay skins para mostrar ahora.");
+                    _skinHasMore = false;
+                    pintarGaleriaSkins([], isAll
+                        ? "No hay skins para mostrar ahora."
+                        : ("No hay skins aptas para \"" + q + "\". Prueba otra palabra: ninja, gato, dragón..."));
                     return;
                 }
-                pintarGaleriaSkins(items, q
-                    ? ("Encontradas " + items.length + " skins para \"" + q + "\".")
-                    : "Skins recomendadas. Busca por contenido o elige una categoría.");
+
+                pintarGaleriaSkins(items, isAll
+                    ? "🔥 Skins (" + items.length + " cargadas). Desliza hacia abajo para más."
+                    : "Encontradas skins para \"" + q + "\" (" + items.length + "). Desliza hacia abajo para más.");
+
+                initInfiniteScrollSkins();
             } catch (e) {
-                st.textContent = "No se pudo buscar ahora. Inténtalo de nuevo o sube un PNG.";
+                console.error("Error buscando skins:", e);
+                if (st) st.textContent = "No se pudo conectar para buscar skins. Inténtalo de nuevo.";
+                if (grid) grid.innerHTML = '';
             }
         }
 
@@ -962,11 +1704,12 @@
                     name: String(item.name || "Skin").substring(0, 16),
                     model: item.model === "alex" ? "alex" : (document.getElementById('btn-model-alex').classList.contains('active') ? "alex" : "steve"),
                     pngBase64: pngBase64,
+                    textureUrl: item.textureUrl,
                     previewUser: null
                 }, true);
                 st.textContent = "Skin \"" + item.name + "\" seleccionada.";
             } catch (e) {
-                st.textContent = "No se pudo descargar esa skin. Prueba otra o súbela como PNG.";
+                st.textContent = "No se pudo descargar esa skin. Prueba otra.";
             }
         }
 
@@ -1123,6 +1866,8 @@
                 console.error("Skin:", e);
                 window._logicraftPendingSkin = null;
             }
+            // Solo guarda al darle a entrar al mundo (3 reintentos con 5s de espera)
+            guardarSkinEnServidorConRetries(_selectedSkin);
             await iniciarMotorJuego(_internalUsername, _pendingPwdHash);
         }
 
@@ -1143,9 +1888,11 @@
         function abrirCreditsLogise() {
             const w = window.open("about:blank", "eaglercraft-credits", "width=480,height=220");
             if (!w) return;
-            w.document.open();
-            w.document.write("<!DOCTYPE html><html><head><meta charset=\"UTF-8\"><title>EaglercraftX 1.12 Credits</title></head><body style=\"margin:16px;background:#ffffff;color:#000000;font-family:sans-serif;\"><p>Creado por Logise usando TeaVM</p><p>1.12.2 MC</p></body></html>");
-            w.document.close();
+            try {
+                w.document.title = "EaglercraftX 1.12 Credits";
+                w.document.body.style.cssText = "margin:16px;background:#ffffff;color:#000000;font-family:sans-serif;";
+                w.document.body.innerHTML = "<p>Creado por Logise usando TeaVM</p><p>1.12.2 MC</p>";
+            } catch (e) {}
         }
 
         function esperarMotor() {
