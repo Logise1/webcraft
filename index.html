@@ -897,7 +897,7 @@
 
 <body>
     <!-- Pantalla de Servidor Apagado (Horario Nocturno) -->
-    <div id="pantalla-servidor-apagado">
+    <div id="pantalla-servidor-apagado" style="display: none;">
         <div class="server-off-glow"></div>
         <div class="server-off-card">
             <div class="server-off-icon-wrap">🌙</div>
@@ -2349,6 +2349,10 @@
                     actualizarContadorPantallaApagado();
                 }
             } else {
+                const p = document.getElementById('pantalla-servidor-apagado');
+                if (p && p.style.display !== 'none') {
+                    p.style.display = 'none';
+                }
                 // Si la pantalla de apagado estaba activa y acaba de dar la hora (7:00 AM)
                 if (_servidorApagadoActivo) {
                     console.log("¡Han dado las 7:00 AM! Autoabriendo servidor...");
