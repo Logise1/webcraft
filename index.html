@@ -694,12 +694,249 @@
                 padding: 16px;
             }
             .hub-preview-card { position: static; }
-            .hub-preview-stage { height: 240px; }
+        /* Pantalla de Horario de Servidor Apagado */
+        #pantalla-servidor-apagado {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: radial-gradient(circle at center, rgba(13, 17, 23, 0.96) 0%, rgba(4, 6, 8, 0.99) 100%);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            z-index: 999999;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            animation: fadeInApagado 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes fadeInApagado {
+            from { opacity: 0; transform: scale(0.97); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .server-off-glow {
+            position: absolute;
+            width: 550px;
+            height: 550px;
+            background: radial-gradient(circle, rgba(99, 102, 241, 0.18) 0%, rgba(46, 125, 50, 0.12) 50%, rgba(0, 0, 0, 0) 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            filter: blur(90px);
+        }
+
+        .server-off-card {
+            background: rgba(18, 24, 32, 0.88);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            padding: 44px 38px;
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.75), 0 0 35px rgba(99, 102, 241, 0.1);
+            width: 520px;
+            max-width: 94vw;
+            text-align: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .server-off-icon-wrap {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 20px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(30, 41, 59, 0.6));
+            border: 2px solid rgba(129, 140, 248, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 38px;
+            box-shadow: 0 0 30px rgba(99, 102, 241, 0.35);
+            animation: pulseSleep 3s infinite ease-in-out;
+        }
+
+        @keyframes pulseSleep {
+            0%, 100% { transform: scale(1); box-shadow: 0 0 25px rgba(99, 102, 241, 0.3); }
+            50% { transform: scale(1.05); box-shadow: 0 0 40px rgba(99, 102, 241, 0.55); }
+        }
+
+        .server-off-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid rgba(239, 68, 68, 0.4);
+            color: #fca5a5;
+            padding: 6px 14px;
+            border-radius: 999px;
+            font-size: 12.5px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            margin-bottom: 18px;
+        }
+
+        .server-off-badge-dot {
+            width: 8px;
+            height: 8px;
+            background: #ef4444;
+            border-radius: 50%;
+            display: inline-block;
+            box-shadow: 0 0 8px #ef4444;
+            animation: blinkDot 1.4s infinite;
+        }
+
+        @keyframes blinkDot {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        .server-off-title {
+            font-size: 28px;
+            font-weight: 800;
+            color: #ffffff;
+            margin-bottom: 16px;
+            letter-spacing: -0.3px;
+        }
+
+        .server-off-msg-box {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 14px;
+            padding: 18px 20px;
+            margin-bottom: 24px;
+            line-height: 1.6;
+            font-size: 15px;
+            color: #cbd5e1;
+        }
+
+        .server-countdown-wrap {
+            background: rgba(10, 14, 20, 0.75);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 18px 16px;
+            margin-bottom: 20px;
+        }
+
+        .server-countdown-label {
+            font-size: 11.5px;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: #94a3b8;
+            font-weight: 700;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .server-countdown-digits {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .countdown-unit {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-width: 60px;
+        }
+
+        .countdown-num {
+            font-size: 28px;
+            font-weight: 800;
+            color: #38bdf8;
+            font-variant-numeric: tabular-nums;
+            background: rgba(56, 189, 248, 0.1);
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            border-radius: 10px;
+            padding: 6px 10px;
+            width: 100%;
+        }
+
+        .countdown-tag {
+            font-size: 10.5px;
+            color: #64748b;
+            text-transform: uppercase;
+            font-weight: 600;
+            margin-top: 5px;
+        }
+
+        .countdown-sep {
+            font-size: 24px;
+            font-weight: 700;
+            color: #475569;
+            margin-top: -16px;
+        }
+
+        .server-off-footer {
+            font-size: 12.5px;
+            color: #818cf8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            font-weight: 600;
+        }
+
+        .server-off-note {
+            font-size: 11.5px;
+            color: #64748b;
+            margin-top: 10px;
         }
     </style>
 </head>
 
 <body>
+    <!-- Pantalla de Servidor Apagado (Horario Nocturno) -->
+    <div id="pantalla-servidor-apagado">
+        <div class="server-off-glow"></div>
+        <div class="server-off-card">
+            <div class="server-off-icon-wrap">🌙</div>
+            <div class="server-off-badge">
+                <span class="server-off-badge-dot"></span>
+                <span>Servidor en pausa nocturna</span>
+            </div>
+            <h1 class="server-off-title">¡Gracias por jugar!</h1>
+            <div class="server-off-msg-box">
+                Por los ruidos en mi casa, el servidor se apaga a las 12 PM. Puedes volver a entrar mañana a las 7AM, y se autoabrirá. ¡Gracias!
+            </div>
+            <div class="server-countdown-wrap">
+                <div class="server-countdown-label">
+                    <span>⏳ Tiempo para reapertura automática</span>
+                </div>
+                <div class="server-countdown-digits">
+                    <div class="countdown-unit">
+                        <span class="countdown-num" id="countdown-hours">00</span>
+                        <span class="countdown-tag">Horas</span>
+                    </div>
+                    <span class="countdown-sep">:</span>
+                    <div class="countdown-unit">
+                        <span class="countdown-num" id="countdown-minutes">00</span>
+                        <span class="countdown-tag">Min</span>
+                    </div>
+                    <span class="countdown-sep">:</span>
+                    <div class="countdown-unit">
+                        <span class="countdown-num" id="countdown-seconds">00</span>
+                        <span class="countdown-tag">Seg</span>
+                    </div>
+                </div>
+            </div>
+            <div class="server-off-footer">
+                <span>⚡</span>
+                <span>Se autoabrirá automáticamente a las 7:00 AM.</span>
+            </div>
+            <div class="server-off-note">
+                Horario activo: Lunes a Viernes de 12:00 AM a 7:00 AM. Fines de semana 24h.
+            </div>
+        </div>
+    </div>
+
     <!-- Toast Notification en Juego -->
     <div id="toast-skin">
         <img src="arrow.png" alt="Flecha" class="toast-arrow-img">
@@ -1859,6 +2096,10 @@
         }
 
         async function entrarAlJuego() {
+            if (estaEnHorarioApagado()) {
+                activarPantallaApagado();
+                return;
+            }
             document.getElementById('pantalla-hub').style.display = 'none';
             try {
                 await prepararSkinParaJuego();
@@ -1950,10 +2191,188 @@
             setTimeout(quitarCarga, 15000);
 
             await esperarMotor();
+            if (estaEnHorarioApagado()) {
+                activarPantallaApagado();
+                return;
+            }
+            _juegoIniciado = true;
             main();
         }
 
-        comprobarSesionGuardada();
+        // =========================================================================
+        // CONTROL DE HORARIO DE SERVIDOR Y APAGADO AUTOMÁTICO (EAGLERCRAFT)
+        // =========================================================================
+        const CONFIG_HORARIO_APAGADO = {
+            // Días de lunes a viernes (1 = Lunes, 2 = Martes, 3 = Miércoles, 4 = Jueves, 5 = Viernes)
+            diasSemana: [1, 2, 3, 4, 5],
+            // Horario: Desde 12:00 AM (00:00 / Medianoche) hasta 7:00 AM (07:00)
+            horaInicio: 0,
+            horaFin: 7
+        };
+
+        let _servidorApagadoActivo = false;
+        let _juegoIniciado = false;
+
+        function estaEnHorarioApagado() {
+            // Soporte para pruebas inmediatas por URL (?test_apagado=1 o ?test_shutdown=1) o variable global
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('test_apagado') === '1' || urlParams.get('test_shutdown') === '1' || window._forzarHorarioApagado === true) {
+                return true;
+            }
+            if (window._forzarHorarioApagado === false) {
+                return false;
+            }
+
+            const ahora = new Date();
+            const dia = ahora.getDay(); // 0: Dom, 1: Lun, 2: Mar, 3: Mié, 4: Jue, 5: Vie, 6: Sáb
+            const hora = ahora.getHours();
+
+            // Verificar si hoy es de Lunes a Viernes
+            const esDiaLaboral = CONFIG_HORARIO_APAGADO.diasSemana.includes(dia);
+            if (!esDiaLaboral) {
+                return false;
+            }
+
+            // Horario desde las 12:00 (00:00) hasta las 7:00 AM (07:00)
+            if (hora >= CONFIG_HORARIO_APAGADO.horaInicio && hora < CONFIG_HORARIO_APAGADO.horaFin) {
+                return true;
+            }
+
+            return false;
+        }
+
+        function calcularTiempoRestanteReapertura() {
+            const ahora = new Date();
+            const meta = new Date(ahora);
+            meta.setHours(CONFIG_HORARIO_APAGADO.horaFin, 0, 0, 0);
+
+            // Si ya pasaron las 7:00 AM hoy, la próxima meta es las 7:00 AM de mañana
+            if (ahora.getTime() >= meta.getTime()) {
+                meta.setDate(meta.getDate() + 1);
+            }
+
+            const diff = Math.max(0, meta.getTime() - ahora.getTime());
+            const horas = Math.floor(diff / (1000 * 60 * 60));
+            const minutos = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const segundos = Math.floor((diff % (1000 * 60)) / 1000);
+
+            return {
+                totalMs: diff,
+                horas: String(horas).padStart(2, '0'),
+                minutos: String(minutos).padStart(2, '0'),
+                segundos: String(segundos).padStart(2, '0')
+            };
+        }
+
+        function actualizarContadorPantallaApagado() {
+            const hElem = document.getElementById('countdown-hours');
+            const mElem = document.getElementById('countdown-minutes');
+            const sElem = document.getElementById('countdown-seconds');
+            if (!hElem || !mElem || !sElem) return;
+
+            const r = calcularTiempoRestanteReapertura();
+            hElem.innerText = r.horas;
+            mElem.innerText = r.minutos;
+            sElem.innerText = r.segundos;
+        }
+
+        function cerrarEaglercraftDeGolpe() {
+            console.warn("Cerrando Eaglercraft de golpe por horario nocturno del servidor...");
+
+            // 1. Liberar Pointer Lock del mouse
+            try {
+                if (document.exitPointerLock) {
+                    document.exitPointerLock();
+                } else if (document.mozExitPointerLock) {
+                    document.mozExitPointerLock();
+                }
+            } catch (e) {
+                console.error("Error al salir de pointer lock:", e);
+            }
+
+            // 2. Destruir y vaciar el contenedor de juego Eaglercraft para matar el canvas y WebGL inmediatamente
+            const gf = document.getElementById('game_frame');
+            if (gf) {
+                gf.innerHTML = "";
+                const nuevoGf = gf.cloneNode(false);
+                if (gf.parentNode) {
+                    gf.parentNode.replaceChild(nuevoGf, gf);
+                }
+            }
+
+            // 3. Detener / cerrar contextos de Web Audio si existen
+            try {
+                if (window._eaglercraftAudioContext && typeof window._eaglercraftAudioContext.close === "function") {
+                    window._eaglercraftAudioContext.close();
+                }
+            } catch (e) {}
+
+            // 4. Ocultar interfaces secundarias
+            const carga = document.getElementById('mi-pantalla-carga');
+            if (carga) carga.style.display = 'none';
+
+            const hub = document.getElementById('pantalla-hub');
+            if (hub) hub.style.display = 'none';
+
+            const login = document.getElementById('pantalla-login');
+            if (login) login.style.display = 'none';
+
+            const toast = document.getElementById('toast-skin');
+            if (toast) toast.style.display = 'none';
+
+            _juegoIniciado = false;
+        }
+
+        function activarPantallaApagado() {
+            _servidorApagadoActivo = true;
+
+            // Si estaba jugando o cargando, cerrar Eaglercraft de golpe
+            cerrarEaglercraftDeGolpe();
+
+            const p = document.getElementById('pantalla-servidor-apagado');
+            if (p) {
+                p.style.display = 'flex';
+                actualizarContadorPantallaApagado();
+            }
+        }
+
+        function verificarHorarioServidor() {
+            const enApagado = estaEnHorarioApagado();
+
+            if (enApagado) {
+                if (!_servidorApagadoActivo) {
+                    activarPantallaApagado();
+                } else {
+                    actualizarContadorPantallaApagado();
+                }
+            } else {
+                // Si la pantalla de apagado estaba activa y acaba de dar la hora (7:00 AM)
+                if (_servidorApagadoActivo) {
+                    console.log("¡Han dado las 7:00 AM! Autoabriendo servidor...");
+                    _servidorApagadoActivo = false;
+                    // Se autoabrirá recargando limpiamente para iniciar Eaglercraft fresco
+                    window.location.reload();
+                }
+            }
+        }
+
+        // Helper para que el dueño/desarrollador pueda probar en cualquier momento desde la consola:
+        // probarPantallaApagado(true) para ver la pantalla
+        // probarPantallaApagado(false) para quitarla
+        window.probarPantallaApagado = function(activar = true) {
+            window._forzarHorarioApagado = activar;
+            verificarHorarioServidor();
+            console.log(activar ? "Modo de prueba activado (pantalla mostrada)." : "Modo de prueba desactivado.");
+        };
+
+        // Monitoreo inicial e intervalo continuo cada 1 segundo
+        verificarHorarioServidor();
+        setInterval(verificarHorarioServidor, 1000);
+
+        // Si no está en horario de apagado, ejecutar flujo de login normal
+        if (!estaEnHorarioApagado()) {
+            comprobarSesionGuardada();
+        }
     </script>
     <script src="classes.js" defer></script>
 </body>
