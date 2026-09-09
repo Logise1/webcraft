@@ -2217,6 +2217,12 @@
         let _juegoIniciado = false;
 
         function estaEnHorarioApagado() {
+            try {
+                if (sessionStorage.getItem('_bypass_server_lock') === '1' || window._sessionBypassed === true) {
+                    return false;
+                }
+            } catch (e) {}
+
             // Soporte para pruebas inmediatas por URL (?test_apagado=1 o ?test_shutdown=1) o variable global
             const urlParams = new URLSearchParams(window.location.search);
             if (urlParams.get('test_apagado') === '1' || urlParams.get('test_shutdown') === '1' || window._forzarHorarioApagado === true) {
@@ -2363,13 +2369,31 @@
             }
         }
 
-        // Helper para que el dueño/desarrollador pueda probar en cualquier momento desde la consola:
-        // probarPantallaApagado(true) para ver la pantalla
-        // probarPantallaApagado(false) para quitarla
-        window.probarPantallaApagado = function(activar = true) {
+        // Helper para que puedas probar en cualquier momento desde la consola:
+        // Simplemente escribe en la consola: verPantalla()
+        window.verPantalla = function(activar) {
+            if (typeof activar === "undefined") {
+                activar = !window._forzarHorarioApagado;
+            }
             window._forzarHorarioApagado = activar;
             verificarHorarioServidor();
-            console.log(activar ? "Modo de prueba activado (pantalla mostrada)." : "Modo de prueba desactivado.");
+            return activar 
+                ? "🌙 Mostrando pantalla de apagado. Ejecuta verPantalla() otra vez para cerrarla." 
+                : "☀️ Pantalla de apagado oculta.";
+        };
+        window.probarPantallaApagado = window.verPantalla;
+
+        window.bypass = function() {
+            try {
+                sessionStorage.setItem('_bypass_server_lock', '1');
+            } catch (e) {}
+            window._sessionBypassed = true;
+            window._forzarHorarioApagado = false;
+            _servidorApagadoActivo = false;
+            const p = document.getElementById('pantalla-servidor-apagado');
+            if (p) p.style.display = 'none';
+            comprobarSesionGuardada();
+            return "Bypass activado para esta sesión.";
         };
 
         // Monitoreo inicial e intervalo continuo cada 1 segundo
